@@ -33,6 +33,7 @@
     "@angular-devkit/build-angular": "20.3.37",
     "@angular/cli": "20.3.37",
     "@angular/compiler-cli": "20.3.31",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.2",
     "@types/leaflet": "^1.9.22",
     "@types/leaflet.heat": "^0.2.5",
@@ -46,7 +47,8 @@
     "appId": "com.guayalink.app",
     "productName": "GuayaLink",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "dist/**/*",
@@ -55,12 +57,14 @@
     ],
     "win": {
       "target": "nsis",
+      "icon": "build/icon.ico",
       "artifactName": "GuayaLink-Windows-v${version}-Setup.${ext}"
     },
     "linux": {
       "target": [
         "AppImage"
       ],
+      "icon": "build/icon.png",
       "category": "Utility",
       "artifactName": "GuayaLink-Linux-v${version}.${ext}"
     },
@@ -68,6 +72,7 @@
       "target": [
         "dmg"
       ],
+      "icon": "build/icon.png",
       "category": "public.app-category.utilities",
       "artifactName": "GuayaLink-macOS-v${version}.${ext}"
     },
