@@ -20,8 +20,11 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Compilar GuayaLink para Linux
-        run: npm run electron:build:linux
+      - name: Compilar Angular
+        run: npm run build -- --base-href ./
+
+      - name: Crear GuayaLink para Linux
+        run: npx electron-builder --linux AppImage --publish never
 
       - name: Subir AppImage
         uses: actions/upload-artifact@v4
