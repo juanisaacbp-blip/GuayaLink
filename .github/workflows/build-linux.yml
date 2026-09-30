@@ -1,0 +1,31 @@
+name: Build GuayaLink Linux
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar GuayaLink para Linux
+        run: npm run electron:build:linux
+
+      - name: Subir AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: GuayaLink-Linux-v1.0.0
+          path: release/*.AppImage
+          if-no-files-found: error
