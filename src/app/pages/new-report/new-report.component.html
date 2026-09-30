@@ -1,0 +1,620 @@
+<main class="page">
+
+  <div class="container narrow">
+
+    <header>
+
+      <p class="eyebrow">
+        GUAYALINK
+      </p>
+
+      <h1>
+        {{ t('newReport.title') }}
+      </h1>
+
+      <p class="muted">
+        {{ t('newReport.subtitle') }}
+      </p>
+
+    </header>
+
+
+    <form
+      class="form card"
+      (ngSubmit)="submit()"
+    >
+
+      <label>
+        {{ t('newReport.titleLabel') }}
+      </label>
+
+      <input
+        class="input"
+        type="text"
+        name="title"
+        [(ngModel)]="title"
+        [placeholder]="t('newReport.titlePlaceholder')"
+        maxlength="100"
+      >
+
+
+      <label>
+        {{ t('newReport.descriptionLabel') }}
+      </label>
+
+      <textarea
+        class="input"
+        rows="5"
+        name="description"
+        [(ngModel)]="description"
+        [placeholder]="t('newReport.descriptionPlaceholder')"
+        maxlength="800"
+      ></textarea>
+
+
+      <!-- FOTO -->
+
+      <label>
+        {{ t('newReport.photoEvidence') }}
+      </label>
+
+
+      <input
+        #photoInput
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        hidden
+        (change)="selectPhoto($event)"
+      >
+
+
+      <button
+        type="button"
+        class="upload"
+        (click)="photoInput.click()"
+      >
+
+        <span class="upload-icon">
+          📷
+        </span>
+
+        <div>
+
+          <strong>
+            {{
+              selectedFileName ||
+              t('newReport.addPhoto')
+            }}
+          </strong>
+
+          <small>
+            {{ t('newReport.photoAIHint') }}
+          </small>
+
+        </div>
+
+      </button>
+
+
+      <div
+        class="preview"
+        *ngIf="selectedImage"
+      >
+
+        <img
+          [src]="selectedImage"
+          [alt]="t('newReport.photoAlt')"
+        >
+
+
+        <button
+          type="button"
+          class="remove-photo"
+          (click)="removePhoto()"
+        >
+          ✕ {{ t('newReport.removePhoto') }}
+        </button>
+
+      </div>
+
+
+      <!-- IA -->
+
+      <section class="ai-launch">
+
+        <div class="ai-launch-info">
+
+          <div class="ai-logo">
+            ✦
+          </div>
+
+          <div>
+
+            <strong>
+              GuayaLink AI
+            </strong>
+
+            <p>
+              {{ t('newReport.aiDescription') }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="ai-button"
+          (click)="analyzeWithAI()"
+          [disabled]="aiLoading"
+        >
+
+          <span *ngIf="!aiLoading">
+            ✦ {{ t('newReport.analyzeAI') }}
+          </span>
+
+
+          <span
+            *ngIf="aiLoading"
+            class="ai-loading-text"
+          >
+
+            <i class="ai-spinner"></i>
+
+            {{ t('newReport.analyzing') }}
+
+          </span>
+
+        </button>
+
+      </section>
+
+
+      <div
+        class="ai-error"
+        *ngIf="aiErrorMessage"
+      >
+        {{ aiErrorMessage }}
+      </div>
+
+
+      <!-- RESULTADO IA -->
+
+      <section
+        class="ai-result"
+        *ngIf="aiAnalysis"
+      >
+
+        <div class="ai-result-header">
+
+          <div>
+
+            <span class="ai-result-eyebrow">
+              ✦ GUAYALINK AI
+            </span>
+
+            <h2>
+              {{ t('newReport.aiResultTitle') }}
+            </h2>
+
+          </div>
+
+
+          <span
+            class="ai-source"
+            [class.fallback]="
+              aiSource === 'local'
+            "
+          >
+
+            {{
+              aiSource === 'gemini'
+                ? 'Gemini AI'
+                : t('newReport.localFallback')
+            }}
+
+          </span>
+
+        </div>
+
+
+        <div class="ai-metrics">
+
+          <article>
+
+            <small>
+              {{ t('newReport.category') }}
+            </small>
+
+            <strong>
+              {{
+                getCategoryLabel(
+                  aiAnalysis.categoria
+                )
+              }}
+            </strong>
+
+          </article>
+
+
+          <article>
+
+            <small>
+              {{ t('newReport.priority') }}
+            </small>
+
+            <strong
+              class="priority-value"
+              [attr.data-priority]="
+                aiAnalysis.prioridad
+              "
+            >
+              {{ getPriorityLabel() }}
+            </strong>
+
+          </article>
+
+
+          <article>
+
+            <small>
+              {{ t('newReport.riskLevel') }}
+            </small>
+
+            <strong
+              class="risk-value"
+              [ngClass]="getRiskClass()"
+            >
+              {{ aiAnalysis.nivelRiesgo }}/10
+            </strong>
+
+          </article>
+
+
+          <article>
+
+            <small>
+              {{ t('newReport.confidence') }}
+            </small>
+
+            <strong>
+              {{ aiAnalysis.confianza }}%
+            </strong>
+
+          </article>
+
+        </div>
+
+
+        <div class="risk-meter">
+
+          <div class="risk-labels">
+
+            <span>
+              {{ t('newReport.estimatedRisk') }}
+            </span>
+
+            <strong>
+              {{ aiAnalysis.nivelRiesgo }}/10
+            </strong>
+
+          </div>
+
+
+          <div class="risk-track">
+
+            <div
+              [style.width.%]="
+                aiAnalysis.nivelRiesgo * 10
+              "
+              [ngClass]="getRiskClass()"
+            ></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="ai-section">
+
+          <small>
+            {{ t('newReport.adminSummary') }}
+          </small>
+
+          <p>
+            {{ aiAnalysis.resumen }}
+          </p>
+
+        </div>
+
+
+        <div class="ai-section">
+
+          <small>
+            {{ t('newReport.whyPriority') }}
+          </small>
+
+          <p>
+            {{ aiAnalysis.explicacion }}
+          </p>
+
+        </div>
+
+
+        <div class="ai-section action-section">
+
+          <small>
+            {{ t('newReport.recommendedAction') }}
+          </small>
+
+          <p>
+            {{ aiAnalysis.accionRecomendada }}
+          </p>
+
+        </div>
+
+
+        <div
+          class="risk-factors"
+          *ngIf="
+            aiAnalysis.factoresRiesgo.length > 0
+          "
+        >
+
+          <small>
+            {{ t('newReport.detectedFactors') }}
+          </small>
+
+
+          <div>
+
+            <span
+              *ngFor="
+                let factor
+                of aiAnalysis.factoresRiesgo
+              "
+            >
+              {{ factor }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="fast-attention"
+          *ngIf="
+            aiAnalysis.requiereAtencionRapida
+          "
+        >
+          ⚡ {{ t('newReport.fastAttention') }}
+        </div>
+
+
+        <p class="ai-disclaimer">
+          {{ t('newReport.aiDisclaimer') }}
+        </p>
+
+      </section>
+
+
+      <!-- CATEGORIA -->
+
+      <label>
+        {{ t('newReport.finalCategory') }}
+      </label>
+
+
+      <select
+        class="input"
+        [(ngModel)]="category"
+        name="category"
+      >
+
+        <option
+          *ngFor="
+            let c
+            of categories
+          "
+          [value]="c"
+        >
+          {{ getCategoryLabel(c) }}
+        </option>
+
+      </select>
+
+
+      <!-- UBICACION -->
+
+      <label>
+        {{ t('newReport.location') }}
+      </label>
+
+
+      <div class="location-card">
+
+        <div class="location-icon">
+          📍
+        </div>
+
+        <div>
+
+          <strong>
+            {{
+              latitude === null
+                ? t('newReport.locationNotDetected')
+                : location
+            }}
+          </strong>
+
+          <small>
+            {{ t('newReport.locationDuplicateHint') }}
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="location-button"
+        type="button"
+        (click)="getLocation()"
+        [disabled]="locating"
+      >
+
+        {{
+          locating
+            ? t('newReport.gettingLocation')
+            : t('newReport.useLocation')
+        }}
+
+      </button>
+
+
+      <!-- DUPLICADO -->
+
+      <section
+        class="duplicate-warning"
+        *ngIf="duplicate"
+      >
+
+        <div class="warning-icon">
+          ⚠
+        </div>
+
+
+        <div class="duplicate-content">
+
+          <span class="duplicate-label">
+            {{ t('newReport.possibleDuplicate') }}
+          </span>
+
+
+          <h3>
+            {{ t('newReport.duplicateFound') }}
+          </h3>
+
+
+          <strong>
+            {{ duplicate.title }}
+          </strong>
+
+
+          <p>
+            {{ duplicate.description }}
+          </p>
+
+
+          <div class="duplicate-meta">
+
+            <span>
+              📍 {{ duplicate.distance }} m
+            </span>
+
+            <span>
+              {{
+                getCategoryLabel(
+                  duplicate.category
+                )
+              }}
+            </span>
+
+            <span>
+              👍
+              {{ duplicate.supportCount }}
+              {{ t('newReport.supports') }}
+            </span>
+
+          </div>
+
+
+          <div class="duplicate-actions">
+
+            <button
+              type="button"
+              class="support-existing"
+              (click)="supportDuplicate()"
+              [disabled]="loading"
+            >
+              👍 {{ t('newReport.supportExisting') }}
+            </button>
+
+
+            <button
+              type="button"
+              class="create-anyway"
+              (click)="createAnyway()"
+              [disabled]="loading"
+            >
+              {{ t('newReport.createAnyway') }}
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <div
+        class="error-message"
+        *ngIf="errorMessage"
+      >
+        {{ errorMessage }}
+      </div>
+
+
+      <div
+        class="success-message"
+        *ngIf="successMessage"
+      >
+        {{ successMessage }}
+      </div>
+
+
+      <button
+        class="publish-button"
+        type="submit"
+        [disabled]="
+          loading ||
+          checkingDuplicates ||
+          aiLoading
+        "
+      >
+
+        <span
+          *ngIf="
+            !loading &&
+            !checkingDuplicates
+          "
+        >
+          {{ t('newReport.publish') }} →
+        </span>
+
+
+        <span
+          *ngIf="checkingDuplicates"
+        >
+          {{ t('newReport.checkingDuplicates') }}
+        </span>
+
+
+        <span
+          *ngIf="loading"
+        >
+          {{ t('newReport.publishing') }}
+        </span>
+
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

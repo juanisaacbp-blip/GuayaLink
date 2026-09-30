@@ -1,0 +1,413 @@
+<main class="page">
+
+  <div
+    class="container report-container"
+    *ngIf="!loading && report"
+  >
+
+    <a
+      routerLink="/dashboard"
+      class="back-link"
+    >
+      ← Volver
+    </a>
+
+
+    <section class="hero card">
+
+      <div class="hero-icon">
+        📍
+      </div>
+
+
+      <div class="hero-main">
+
+        <div class="badges">
+
+          <span class="category">
+            {{ report.category }}
+          </span>
+
+          <span
+            class="priority"
+            [attr.data-priority]="report.priority"
+          >
+            {{ getPriorityLabel() }}
+          </span>
+
+          <span
+            class="status"
+            [attr.data-status]="report.status"
+          >
+            {{ getStatusLabel() }}
+          </span>
+
+        </div>
+
+
+        <h1>
+          {{ report.title }}
+        </h1>
+
+
+        <p>
+          {{ report.description }}
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONFIRMACION -->
+
+    <section
+      class="confirmation-card"
+      *ngIf="
+        report.status ===
+        'pendiente_confirmacion'
+        &&
+        isOwner()
+      "
+    >
+
+      <div class="confirmation-icon">
+        ✓
+      </div>
+
+
+      <div class="confirmation-text">
+
+        <span>
+          VERIFICACIÓN CIUDADANA
+        </span>
+
+        <h2>
+          ¿El problema realmente fue solucionado?
+        </h2>
+
+        <p>
+          El trabajador indicó que terminó el trabajo.
+          Tu confirmación cerrará definitivamente el reporte.
+        </p>
+
+
+        <div class="confirmation-actions">
+
+          <button
+            type="button"
+            class="confirm-button"
+            (click)="confirmResolution()"
+            [disabled]="updating"
+          >
+            ✓ Sí, está solucionado
+          </button>
+
+
+          <button
+            type="button"
+            class="reject-button"
+            (click)="rejectResolution()"
+            [disabled]="updating"
+          >
+            ✕ El problema continúa
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="info-grid">
+
+      <article class="card info-card">
+
+        <small>
+          Ubicación
+        </small>
+
+        <strong>
+          {{ report.location }}
+        </strong>
+
+        <button
+          type="button"
+          (click)="openMaps()"
+        >
+          Abrir en Maps
+        </button>
+
+      </article>
+
+
+      <article class="card info-card">
+
+        <small>
+          Trabajador
+        </small>
+
+        <strong>
+          {{
+            report.assignedWorkerName ||
+            report.assignedWorkerEmail ||
+            'Todavía sin asignar'
+          }}
+        </strong>
+
+      </article>
+
+
+      <article class="card info-card">
+
+        <small>
+          Apoyos ciudadanos
+        </small>
+
+        <strong>
+          {{ report.supportCount }}
+        </strong>
+
+        <button
+          type="button"
+          (click)="supportReport()"
+          [disabled]="updating"
+        >
+          👍 Apoyar
+        </button>
+
+      </article>
+
+    </section>
+
+
+    <!-- PROGRESO -->
+
+    <section class="card progress-section">
+
+      <div>
+
+        <h2>
+          Progreso
+        </h2>
+
+        <strong>
+          {{ report.progress }}%
+        </strong>
+
+      </div>
+
+
+      <div class="progress-track">
+
+        <div
+          [style.width.%]="report.progress"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HISTORIAL -->
+
+    <section class="card history">
+
+      <div class="history-header">
+
+        <p class="eyebrow">
+          HISTORIAL
+        </p>
+
+        <h2>
+          Seguimiento del reporte
+        </h2>
+
+        <p>
+          Cada cambio importante queda registrado.
+        </p>
+
+      </div>
+
+
+      <div class="timeline">
+
+        <article class="timeline-item completed">
+
+          <div class="timeline-marker"></div>
+
+          <div>
+
+            <span>
+              Reporte creado
+            </span>
+
+            <strong>
+              {{ formatDate(report.createdAt) }}
+            </strong>
+
+            <p>
+              El ciudadano registró el problema.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article
+          class="timeline-item"
+          [class.completed]="report.assignedAt"
+        >
+
+          <div class="timeline-marker"></div>
+
+          <div>
+
+            <span>
+              Trabajador asignado
+            </span>
+
+            <strong>
+              {{ formatDate(report.assignedAt) }}
+            </strong>
+
+            <p>
+              El administrador asignó el caso.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article
+          class="timeline-item"
+          [class.completed]="report.startedAt"
+        >
+
+          <div class="timeline-marker"></div>
+
+          <div>
+
+            <span>
+              Trabajo iniciado
+            </span>
+
+            <strong>
+              {{ formatDate(report.startedAt) }}
+            </strong>
+
+            <p>
+              El trabajador comenzó la intervención.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article
+          class="timeline-item"
+          [class.completed]="report.workerCompletedAt"
+        >
+
+          <div class="timeline-marker"></div>
+
+          <div>
+
+            <span>
+              Trabajo terminado
+            </span>
+
+            <strong>
+              {{ formatDate(report.workerCompletedAt) }}
+            </strong>
+
+            <p>
+              El trabajador indicó que el problema fue solucionado.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article
+          class="timeline-item rejection"
+          *ngIf="report.citizenRejectedAt"
+        >
+
+          <div class="timeline-marker"></div>
+
+          <div>
+
+            <span>
+              Solución rechazada
+            </span>
+
+            <strong>
+              {{ formatDate(report.citizenRejectedAt) }}
+            </strong>
+
+            <p>
+              El ciudadano indicó que el problema todavía existe.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article
+          class="timeline-item"
+          [class.completed]="report.citizenConfirmedAt"
+        >
+
+          <div class="timeline-marker"></div>
+
+          <div>
+
+            <span>
+              Solución confirmada
+            </span>
+
+            <strong>
+              {{ formatDate(report.citizenConfirmedAt) }}
+            </strong>
+
+            <p>
+              El ciudadano verificó la solución.
+            </p>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <div
+    class="page-loading"
+    *ngIf="loading"
+  >
+    Cargando reporte...
+  </div>
+
+
+  <div
+    class="page-loading"
+    *ngIf="!loading && !report"
+  >
+    No encontramos este reporte.
+  </div>
+
+
+  <app-nav />
+
+</main>

@@ -1,0 +1,582 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   PAGINA
+========================= */
+
+.welcome-page {
+
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  background:
+
+    radial-gradient(
+      circle at 82% 18%,
+      rgba(96, 165, 250, 0.30),
+      transparent 34%
+    ),
+
+    radial-gradient(
+      circle at 72% 88%,
+      rgba(52, 211, 153, 0.18),
+      transparent 36%
+    ),
+
+    linear-gradient(
+      135deg,
+      #16324f 0%,
+      #1f4e79 48%,
+      #176b70 100%
+    );
+
+}
+
+
+/* DECORACION DE FONDO */
+
+.welcome-page::before {
+
+  content: '';
+
+  position: absolute;
+
+  width: 650px;
+  height: 650px;
+
+  top: -340px;
+  left: -260px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(147, 197, 253, 0.16);
+
+  filter: blur(28px);
+
+}
+
+
+.welcome-page::after {
+
+  content: '';
+
+  position: absolute;
+
+  width: 540px;
+  height: 540px;
+
+  right: -250px;
+  bottom: -300px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(52, 211, 153, 0.13);
+
+  filter: blur(30px);
+
+}
+
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.welcome-content {
+
+  width: 100%;
+  max-width: 850px;
+
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.brand {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 32px;
+
+}
+
+
+/* CUADRO DEL LOGO */
+
+.brand-icon {
+
+  width: 112px;
+  height: 112px;
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 15px;
+
+  border:
+
+    1px solid
+    rgba(255, 255, 255, 0.28);
+
+  border-radius: 30px;
+
+  background:
+
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.24),
+      rgba(255, 255, 255, 0.10)
+    );
+
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+
+    0 20px 50px
+    rgba(15, 23, 42, 0.20),
+
+    inset
+    0 1px 0
+    rgba(255, 255, 255, 0.22);
+
+}
+
+
+/* G */
+
+.brand-g {
+
+  position: absolute;
+
+  left: 29px;
+
+  top: 23px;
+
+  color: #93c5fd;
+
+  font-size: 45px;
+
+  line-height: 1;
+
+  font-weight: 900;
+
+  letter-spacing: -3px;
+
+  text-shadow:
+    0 8px 22px
+    rgba(37, 99, 235, 0.28);
+
+}
+
+
+/* L */
+
+.brand-l {
+
+  position: absolute;
+
+  right: 27px;
+
+  bottom: 20px;
+
+  color: #5ee5b7;
+
+  font-size: 43px;
+
+  line-height: 1;
+
+  font-weight: 900;
+
+  letter-spacing: -3px;
+
+  text-shadow:
+    0 8px 22px
+    rgba(16, 185, 129, 0.24);
+
+}
+
+
+/* NOMBRE ABAJO */
+
+.brand-name {
+
+  color: #dbeafe;
+
+  font-size: 13px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.32em;
+
+  padding-left: 0.32em;
+
+}
+
+
+/* =========================
+   TITULO
+========================= */
+
+h1 {
+
+  max-width: 800px;
+
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size:
+
+    clamp(
+      48px,
+      6.5vw,
+      84px
+    );
+
+  line-height: 0.98;
+
+  letter-spacing: -0.05em;
+
+  font-weight: 900;
+
+  text-shadow:
+    0 14px 34px
+    rgba(15, 23, 42, 0.20);
+
+}
+
+
+h1 span {
+
+  display: block;
+
+  margin-top: 8px;
+
+  color: #5ee5b7;
+
+}
+
+
+/* =========================
+   DESCRIPCION
+========================= */
+
+.description {
+
+  max-width: 610px;
+
+  margin:
+
+    28px
+    auto
+    0;
+
+  color: #e2e8f0;
+
+  font-size: 17px;
+
+  line-height: 1.75;
+
+}
+
+
+/* =========================
+   BOTONES
+========================= */
+
+.actions {
+
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-top: 34px;
+
+}
+
+
+.start-button {
+
+  width: 270px;
+  min-height: 58px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 10px;
+
+  border:
+
+    1px solid
+    rgba(255, 255, 255, 0.18);
+
+  border-radius: 16px;
+
+  color: #ffffff;
+
+  background:
+
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #2f80ed 55%,
+      #10b981
+    );
+
+  font-size: 15px;
+
+  font-weight: 900;
+
+  box-shadow:
+
+    0 15px 36px
+    rgba(37, 99, 235, 0.30);
+
+  transition:
+
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+
+}
+
+
+.start-button:hover {
+
+  transform: translateY(-2px);
+
+  filter: brightness(1.07);
+
+  box-shadow:
+
+    0 20px 44px
+    rgba(37, 99, 235, 0.38);
+
+}
+
+
+.start-button span {
+
+  font-size: 18px;
+
+}
+
+
+.guest-button {
+
+  padding: 12px 18px;
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+
+  border-radius: 12px;
+
+}
+
+
+.guest-button:hover {
+
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .brand-icon {
+
+    width: 100px;
+    height: 100px;
+
+  }
+
+
+  .brand-g {
+
+    left: 26px;
+    top: 20px;
+
+    font-size: 41px;
+
+  }
+
+
+  .brand-l {
+
+    right: 25px;
+    bottom: 18px;
+
+    font-size: 39px;
+
+  }
+
+
+  .description {
+
+    max-width: 550px;
+
+  }
+
+}
+
+
+/* =========================
+   MOVIL
+========================= */
+
+@media (max-width: 600px) {
+
+  .welcome-page {
+
+    padding:
+
+      35px
+      18px;
+
+  }
+
+
+  .brand {
+
+    margin-bottom: 25px;
+
+  }
+
+
+  .brand-icon {
+
+    width: 88px;
+    height: 88px;
+
+    border-radius: 24px;
+
+  }
+
+
+  .brand-g {
+
+    left: 23px;
+    top: 18px;
+
+    font-size: 36px;
+
+  }
+
+
+  .brand-l {
+
+    right: 22px;
+    bottom: 16px;
+
+    font-size: 34px;
+
+  }
+
+
+  .brand-name {
+
+    font-size: 11px;
+
+  }
+
+
+  h1 {
+
+    font-size:
+      clamp(
+        43px,
+        13vw,
+        58px
+      );
+
+  }
+
+
+  .description {
+
+    margin-top: 22px;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+
+  }
+
+
+  .actions {
+
+    margin-top: 28px;
+
+  }
+
+
+  .start-button {
+
+    width: 100%;
+    max-width: 310px;
+
+  }
+
+}

@@ -1,0 +1,167 @@
+<main class="page">
+
+  <div class="container notifications-page">
+
+    <header>
+
+      <div>
+
+        <p class="eyebrow">
+          GUAYALINK
+        </p>
+
+        <h1>
+          {{ t('notifications.title') }}
+        </h1>
+
+        <p class="muted">
+          {{ t('notifications.subtitle') }}
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="mark-all"
+        *ngIf="unreadCount() > 0"
+        (click)="markAllAsRead()"
+      >
+
+        {{ t('notifications.markAllRead') }}
+
+      </button>
+
+    </header>
+
+
+    <div
+      class="summary"
+      *ngIf="!loading"
+    >
+
+      <span>
+        {{ unreadCount() }}
+      </span>
+
+      {{
+        unreadCount() === 1
+          ? t('notifications.unreadSingular')
+          : t('notifications.unreadPlural')
+      }}
+
+    </div>
+
+
+    <div
+      class="loading"
+      *ngIf="loading"
+    >
+
+      {{ t('notifications.loading') }}
+
+    </div>
+
+
+    <section
+      class="empty card"
+      *ngIf="
+        !loading &&
+        notifications.length === 0
+      "
+    >
+
+      <div>
+        🔔
+      </div>
+
+      <h2>
+        {{ t('notifications.emptyTitle') }}
+      </h2>
+
+      <p class="muted">
+        {{ t('notifications.emptyDescription') }}
+      </p>
+
+    </section>
+
+
+    <section class="notification-list">
+
+      <article
+        class="notification card"
+        *ngFor="
+          let notification
+          of notifications
+        "
+        [class.unread]="
+          !notification.read
+        "
+        (click)="
+          openNotification(
+            notification
+          )
+        "
+      >
+
+        <div class="icon">
+
+          {{
+            getIcon(
+              notification.type
+            )
+          }}
+
+        </div>
+
+
+        <div class="content">
+
+          <div class="title-row">
+
+            <h3>
+              {{ notification.title }}
+            </h3>
+
+            <span
+              class="unread-dot"
+              *ngIf="
+                !notification.read
+              "
+            ></span>
+
+          </div>
+
+
+          <p>
+            {{ notification.message }}
+          </p>
+
+
+          <small>
+
+            {{
+              formatDate(
+                notification.createdAt
+              )
+            }}
+
+          </small>
+
+        </div>
+
+
+        <div class="arrow">
+          ›
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

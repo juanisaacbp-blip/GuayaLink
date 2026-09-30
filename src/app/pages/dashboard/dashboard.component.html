@@ -1,0 +1,404 @@
+<main class="page dashboard-page">
+
+  <div class="container">
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section class="dashboard-hero">
+
+      <div class="hero-content">
+
+        <p class="hello">
+          {{ t('dashboard.welcome') }}
+        </p>
+
+        <h1>
+          {{ t('dashboard.hello') }},
+          {{ userName }} 👋
+        </h1>
+
+        <p class="hero-description">
+          {{ t('dashboard.description') }}
+        </p>
+
+      </div>
+
+
+      <div class="hero-actions">
+
+        <a
+          routerLink="/notificaciones"
+          class="bell"
+          [attr.aria-label]="t('dashboard.notifications')"
+        >
+          🔔
+        </a>
+
+
+        <a
+          routerLink="/nuevo-reporte"
+          class="hero-report-button"
+        >
+
+          <span>
+            ＋
+          </span>
+
+          {{ t('dashboard.newReport') }}
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         IMPACTO
+    ========================== -->
+
+    <section class="impact-card">
+
+      <div class="impact-icon">
+        ✦
+      </div>
+
+
+      <div class="impact-content">
+
+        <span>
+          {{ t('dashboard.citizenImpact') }}
+        </span>
+
+        <strong>
+          {{ t('dashboard.communityMoves') }}
+        </strong>
+
+        <small>
+          {{ t('dashboard.impactDescription') }}
+        </small>
+
+      </div>
+
+
+      <div class="impact-total">
+
+        <strong>
+          {{ totalReports }}
+        </strong>
+
+        <span>
+          {{ t('dashboard.reports') }}
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ESTADISTICAS
+    ========================== -->
+
+    <section class="stats">
+
+      <article class="stat-card stat-progress">
+
+        <div class="stat-icon">
+          ◷
+        </div>
+
+        <div>
+
+          <b>
+            {{ inProgressReports }}
+          </b>
+
+          <span>
+            {{ t('dashboard.inProgress') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-resolved">
+
+        <div class="stat-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <b>
+            {{ resolvedReports }}
+          </b>
+
+          <span>
+            {{ t('dashboard.resolved') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-support">
+
+        <div class="stat-icon">
+          ♥
+        </div>
+
+        <div>
+
+          <b>
+            {{ totalSupports }}
+          </b>
+
+          <span>
+            {{ t('dashboard.supports') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-total">
+
+        <div class="stat-icon">
+          ◉
+        </div>
+
+        <div>
+
+          <b>
+            {{ totalReports }}
+          </b>
+
+          <span>
+            {{ t('dashboard.reports') }}
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =========================
+         ACCESO RAPIDO
+    ========================== -->
+
+    <section class="actions">
+
+      <div class="section-heading">
+
+        <div>
+
+          <span>
+            {{ t('dashboard.quickAccess') }}
+          </span>
+
+          <h2>
+            {{ t('dashboard.whatDoYouWant') }}
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="action-grid">
+
+        <a
+          routerLink="/nuevo-reporte"
+          class="action-card action-report"
+        >
+
+          <div class="action-icon">
+            ＋
+          </div>
+
+          <div>
+
+            <strong>
+              {{ t('dashboard.newReport') }}
+            </strong>
+
+            <small>
+              {{ t('dashboard.newReportDescription') }}
+            </small>
+
+          </div>
+
+          <b class="action-arrow">
+            →
+          </b>
+
+        </a>
+
+
+        <a
+          routerLink="/mapa"
+          class="action-card action-map"
+        >
+
+          <div class="action-icon">
+            ⌖
+          </div>
+
+          <div>
+
+            <strong>
+              {{ t('dashboard.exploreMap') }}
+            </strong>
+
+            <small>
+              {{ t('dashboard.exploreMapDescription') }}
+            </small>
+
+          </div>
+
+          <b class="action-arrow">
+            →
+          </b>
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ACTIVIDAD
+    ========================== -->
+
+    <section class="feed">
+
+      <div class="section-title">
+
+        <div>
+
+          <span>
+            {{ t('dashboard.yourReports') }}
+          </span>
+
+          <h2>
+            {{ t('dashboard.recentActivity') }}
+          </h2>
+
+        </div>
+
+
+        <a routerLink="/mapa">
+          {{ t('dashboard.viewMap') }} →
+        </a>
+
+      </div>
+
+
+      <!-- SIN REPORTES -->
+
+      <div
+        class="empty-reports"
+        *ngIf="
+          !loading &&
+          reports.length === 0
+        "
+      >
+
+        <div class="empty-icon">
+          📍
+        </div>
+
+        <h3>
+          {{ t('dashboard.noReportsTitle') }}
+        </h3>
+
+        <p>
+          {{ t('dashboard.noReportsDescription') }}
+        </p>
+
+        <a routerLink="/nuevo-reporte">
+          {{ t('dashboard.firstReport') }}
+        </a>
+
+      </div>
+
+
+      <!-- REPORTES -->
+
+      <article
+        class="report-card"
+        *ngFor="let report of reports"
+      >
+
+        <div class="thumb">
+          📍
+        </div>
+
+
+        <div class="report-info">
+
+          <div class="report-heading">
+
+            <strong>
+              {{ report.title }}
+            </strong>
+
+            <span>
+              {{ report.progress }}%
+            </span>
+
+          </div>
+
+
+          <div class="report-meta">
+
+            <span>
+              {{ report.category }}
+            </span>
+
+            <span class="meta-dot">
+              •
+            </span>
+
+            <span>
+              {{
+                getStatusText(
+                  report.status
+                )
+              }}
+            </span>
+
+          </div>
+
+
+          <div class="bar">
+
+            <i
+              [style.width.%]="
+                report.progress
+              "
+            ></i>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

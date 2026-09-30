@@ -1,0 +1,418 @@
+<main class="page map-page">
+
+  <div class="container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="map-header">
+
+      <div>
+
+        <p class="eyebrow">
+          GUAYALINK
+        </p>
+
+        <h1>
+          {{ t('map.title') }}
+        </h1>
+
+        <p class="muted">
+          {{ t('map.description') }}
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="location-button"
+        (click)="goToMyLocation()"
+        [disabled]="locating"
+      >
+
+        {{
+          locating
+            ? t('map.searching')
+            : t('map.myLocation')
+        }}
+
+      </button>
+
+    </header>
+
+
+    <!-- =========================
+         CONTROLES
+    ========================== -->
+
+    <section class="map-controls">
+
+      <div class="mode-selector">
+
+        <button
+          type="button"
+          [class.active]="
+            mapMode ===
+            'markers'
+          "
+          (click)="
+            setMapMode(
+              'markers'
+            )
+          "
+        >
+          📍 {{ t('map.reportsMode') }}
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="
+            mapMode ===
+            'heat'
+          "
+          (click)="
+            setMapMode(
+              'heat'
+            )
+          "
+        >
+          🔥 {{ t('map.heatMap') }}
+        </button>
+
+      </div>
+
+
+      <div class="filters">
+
+        <button
+          type="button"
+          class="filter"
+          *ngFor="
+            let category
+            of categories
+          "
+          [class.active]="
+            selectedCategory ===
+            category.value
+          "
+          (click)="
+            filterReports(
+              category.value
+            )
+          "
+        >
+
+          {{
+            t(
+              category.labelKey
+            )
+          }}
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         MAPA
+    ========================== -->
+
+    <section class="map-container">
+
+      <div
+        id="real-map"
+        class="real-map"
+      ></div>
+
+
+      <div
+        class="loading-map"
+        *ngIf="loading"
+      >
+
+        <div class="loading-spinner"></div>
+
+        <span>
+          {{ t('map.loading') }}
+        </span>
+
+      </div>
+
+
+      <div
+        class="map-count"
+        *ngIf="!loading"
+      >
+
+        <strong>
+          {{ filteredReports.length }}
+        </strong>
+
+        {{
+          filteredReports.length === 1
+            ? t('map.reportSingular')
+            : t('map.reportPlural')
+        }}
+
+      </div>
+
+
+      <div
+        class="heat-legend"
+        *ngIf="
+          !loading &&
+          mapMode ===
+          'heat'
+        "
+      >
+
+        <span>
+          {{ t('map.lowerConcentration') }}
+        </span>
+
+        <div class="legend-gradient"></div>
+
+        <span>
+          {{ t('map.higherConcentration') }}
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RANKING
+    ========================== -->
+
+    <section class="ranking-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <p class="eyebrow">
+            {{ t('map.urbanAnalysis') }}
+          </p>
+
+          <h2>
+            {{ t('map.topZones') }}
+          </h2>
+
+          <p class="muted">
+            {{ t('map.zoneDescription') }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="ranking-empty card"
+        *ngIf="
+          !loading &&
+          zones.length === 0
+        "
+      >
+
+        {{ t('map.noRanking') }}
+
+      </div>
+
+
+      <div
+        class="ranking-list"
+        *ngIf="
+          zones.length > 0
+        "
+      >
+
+        <article
+          class="zone-card card"
+          *ngFor="
+            let zone of zones;
+            let i = index
+          "
+        >
+
+          <div class="position">
+
+            {{ i + 1 }}
+
+          </div>
+
+
+          <div class="zone-info">
+
+            <div class="zone-heading">
+
+              <strong>
+                {{ zone.name }}
+              </strong>
+
+              <span>
+
+                {{ zone.reports }}
+
+                {{
+                  zone.reports === 1
+                    ? t('map.reportSingular')
+                    : t('map.reportPlural')
+                }}
+
+              </span>
+
+            </div>
+
+
+            <div class="zone-bar">
+
+              <div
+                [style.width.%]="
+                  zone.percentage
+                "
+              ></div>
+
+            </div>
+
+
+            <small>
+
+              {{ zone.percentage }}%
+
+              {{ t('map.ofTotalReports') }}
+
+            </small>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         LISTA DE REPORTES
+    ========================== -->
+
+    <section class="report-list">
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            {{ t('map.visibleReports') }}
+          </h2>
+
+          <p class="muted">
+            {{ t('map.selectReport') }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <article
+        class="report-card card"
+        *ngFor="
+          let report
+          of filteredReports
+        "
+        (click)="
+          openReport(
+            report.id
+          )
+        "
+      >
+
+        <div class="report-icon">
+
+          {{
+            getCategoryIcon(
+              report.category
+            )
+          }}
+
+        </div>
+
+
+        <div class="report-info">
+
+          <div class="report-badges">
+
+            <span class="report-category">
+
+              {{
+                getCategoryLabel(
+                  report.category
+                )
+              }}
+
+            </span>
+
+
+            <span
+              class="priority-small"
+              [attr.data-priority]="
+                report.priority
+              "
+            >
+
+              {{
+                getPriorityLabel(
+                  report.priority
+                )
+              }}
+
+            </span>
+
+          </div>
+
+
+          <h3>
+            {{ report.title }}
+          </h3>
+
+
+          <p class="muted">
+            {{ report.description }}
+          </p>
+
+        </div>
+
+
+        <div class="report-side">
+
+          <span>
+            👍
+            {{ report.supportCount }}
+          </span>
+
+          <button
+            type="button"
+          >
+            {{ t('map.viewReport') }} →
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

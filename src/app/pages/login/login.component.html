@@ -1,0 +1,408 @@
+<main class="auth-page">
+
+  <div class="background-decoration decoration-one"></div>
+  <div class="background-decoration decoration-two"></div>
+
+  <section class="auth-container">
+
+    <!-- LADO IZQUIERDO -->
+
+    <div class="brand-section">
+
+      <a
+        routerLink="/"
+        class="back-button"
+      >
+        ← Volver
+      </a>
+
+      <div class="brand-content">
+
+        <div class="logo">
+
+          <span class="logo-g">
+            G
+          </span>
+
+          <span class="logo-l">
+            L
+          </span>
+
+        </div>
+
+        <p class="logo-name">
+          GUAYALINK
+        </p>
+
+
+        <h1>
+          Tu voz conecta
+          <span>la ciudad.</span>
+        </h1>
+
+
+        <p class="brand-description">
+
+          Reporta problemas urbanos,
+          sigue su progreso y ayuda
+          a construir una ciudad
+          más segura, limpia y conectada.
+
+        </p>
+
+
+        <div class="feature-list">
+
+          <div class="feature">
+
+            <span class="feature-icon">
+              ✓
+            </span>
+
+            <p>
+              Reporta problemas de tu comunidad
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <span class="feature-icon">
+              ✓
+            </span>
+
+            <p>
+              Sigue el progreso de tus reportes
+            </p>
+
+          </div>
+
+
+          <div class="feature">
+
+            <span class="feature-icon">
+              ✓
+            </span>
+
+            <p>
+              Ayuda a mejorar tu ciudad
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- LADO DERECHO -->
+
+    <div class="form-section">
+
+      <div class="form-card">
+
+        <div class="mobile-logo">
+
+          <div class="small-logo">
+            GL
+          </div>
+
+          <span>
+            GuayaLink
+          </span>
+
+        </div>
+
+
+        <div class="form-heading">
+
+          <p class="welcome-label">
+
+            {{
+              isRegisterMode
+                ? 'ÚNETE A GUAYALINK'
+                : 'BIENVENIDO DE NUEVO'
+            }}
+
+          </p>
+
+
+          <h2>
+
+            {{
+              isRegisterMode
+                ? 'Crear cuenta'
+                : 'Iniciar sesión'
+            }}
+
+          </h2>
+
+
+          <p>
+
+            {{
+              isRegisterMode
+                ? 'Crea tu cuenta y comienza a mejorar tu ciudad.'
+                : 'Ingresa a tu cuenta para continuar.'
+            }}
+
+          </p>
+
+        </div>
+
+
+
+        <form
+          (ngSubmit)="isRegisterMode ? register() : login()"
+        >
+
+          <!-- EMAIL -->
+
+          <div class="form-group">
+
+            <label for="email">
+              Correo electrónico
+            </label>
+
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                @
+              </span>
+
+              <input
+                id="email"
+                type="email"
+                name="email"
+                [(ngModel)]="email"
+                placeholder="ejemplo@correo.com"
+                autocomplete="email"
+                required
+              />
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PASSWORD -->
+
+          <div class="form-group">
+
+            <label for="password">
+              Contraseña
+            </label>
+
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                🔒
+              </span>
+
+              <input
+                id="password"
+                type="password"
+                name="password"
+                [(ngModel)]="password"
+                placeholder="Mínimo 6 caracteres"
+                [attr.autocomplete]="
+                  isRegisterMode
+                    ? 'new-password'
+                    : 'current-password'
+                "
+                required
+              />
+
+            </div>
+
+          </div>
+
+
+
+          <!-- CONFIRMAR PASSWORD -->
+
+          <div
+            class="form-group"
+            *ngIf="isRegisterMode"
+          >
+
+            <label for="confirmPassword">
+              Confirmar contraseña
+            </label>
+
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                🔒
+              </span>
+
+              <input
+                id="confirmPassword"
+                type="password"
+                name="confirmPassword"
+                [(ngModel)]="confirmPassword"
+                placeholder="Repite tu contraseña"
+                autocomplete="new-password"
+                required
+              />
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ERROR -->
+
+          <div
+            class="message error-message"
+            *ngIf="errorMessage"
+          >
+
+            <span>
+              !
+            </span>
+
+            {{ errorMessage }}
+
+          </div>
+
+
+
+          <!-- SUCCESS -->
+
+          <div
+            class="message success-message"
+            *ngIf="successMessage"
+          >
+
+            <span>
+              ✓
+            </span>
+
+            {{ successMessage }}
+
+          </div>
+
+
+
+          <!-- SUBMIT -->
+
+          <button
+            type="submit"
+            class="submit-button"
+            [disabled]="loading"
+          >
+
+            <span *ngIf="!loading">
+
+              {{
+                isRegisterMode
+                  ? 'Crear mi cuenta'
+                  : 'Iniciar sesión'
+              }}
+
+              →
+
+            </span>
+
+
+            <span
+              class="loading-content"
+              *ngIf="loading"
+            >
+
+              <span class="spinner"></span>
+
+              Procesando...
+
+            </span>
+
+          </button>
+
+        </form>
+
+
+
+        <div class="divider">
+
+          <span></span>
+
+          <p>
+            o
+          </p>
+
+          <span></span>
+
+        </div>
+
+
+
+        <!-- CAMBIAR LOGIN / REGISTRO -->
+
+        <p class="switch-text">
+
+          {{
+            isRegisterMode
+              ? '¿Ya tienes una cuenta?'
+              : '¿Todavía no tienes una cuenta?'
+          }}
+
+
+          <button
+            type="button"
+            class="switch-button"
+            (click)="toggleMode()"
+            [disabled]="loading"
+          >
+
+            {{
+              isRegisterMode
+                ? 'Iniciar sesión'
+                : 'Crear cuenta'
+            }}
+
+          </button>
+
+        </p>
+
+
+
+        <!-- INVITADO -->
+
+        <button
+          type="button"
+          class="guest-button"
+          routerLink="/dashboard"
+        >
+
+          Continuar como invitado
+
+        </button>
+
+
+
+        <p class="terms">
+
+          Al continuar aceptas los
+          términos de uso y la
+          política de privacidad
+          de GuayaLink.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>

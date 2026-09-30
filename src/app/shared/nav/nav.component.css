@@ -1,0 +1,299 @@
+.nav {
+  position: fixed;
+
+  z-index: 20;
+
+  bottom: 16px;
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+
+  width:
+    min(
+      560px,
+      calc(100% - 24px)
+    );
+
+  height: 72px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr);
+
+  align-items: center;
+
+  padding:
+    8px
+    10px;
+
+  border:
+    1px solid
+    rgba(201, 216, 230, 0.95);
+
+  border-radius: 24px;
+
+  background:
+    rgba(248, 251, 255, 0.92);
+
+  backdrop-filter:
+    blur(18px);
+
+  box-shadow:
+    0 18px 40px
+    rgba(22, 50, 79, 0.16);
+}
+
+
+/* =========================
+   LINKS
+========================= */
+
+.nav a {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+
+  min-height: 52px;
+
+  border-radius: 14px;
+
+  color: #64748b;
+
+  font-size: 18px;
+
+  transition:
+    color .2s ease,
+    background .2s ease,
+    transform .2s ease;
+}
+
+
+.nav a:hover {
+  color: #1f4e79;
+
+  background:
+    rgba(219, 234, 254, 0.55);
+
+  transform:
+    translateY(-1px);
+}
+
+
+.nav a span {
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   ACTIVO
+========================= */
+
+.nav a.active {
+  color: #2563eb;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(219, 234, 254, .85),
+      rgba(236, 253, 245, .65)
+    );
+
+  box-shadow:
+    inset
+    0 0 0 1px
+    rgba(147, 197, 253, 0.38);
+}
+
+
+/* =========================
+   BOTON CREAR
+========================= */
+
+.nav .create {
+  width: 54px;
+  height: 54px;
+
+  justify-self: center;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 18px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #2f80ed 55%,
+      #10b981
+    );
+
+  font-size: 30px;
+
+  box-shadow:
+    0 12px 28px
+    rgba(37, 99, 235, .30);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+}
+
+
+.nav .create:hover {
+  transform:
+    translateY(-2px)
+    scale(1.03);
+
+  filter:
+    brightness(1.05);
+
+  box-shadow:
+    0 16px 34px
+    rgba(37, 99, 235, .38);
+}
+
+
+/* =========================
+   HOST
+========================= */
+
+:host {
+  position: relative;
+
+  z-index: 2000;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (
+  min-width: 700px
+)
+and
+(
+  max-width: 1180px
+) {
+
+  nav {
+    min-width: 540px;
+
+    max-width: 650px;
+
+    min-height: 72px;
+
+    padding:
+      8px
+      12px;
+
+    border-radius: 22px;
+  }
+
+
+  nav a {
+    min-width: 82px;
+
+    min-height: 54px;
+
+    border-radius: 14px;
+  }
+
+
+  nav a span {
+    font-size: 11px;
+  }
+
+}
+
+
+/* =========================
+   TABLET HORIZONTAL
+========================= */
+
+@media (
+  orientation: landscape
+)
+and
+(
+  min-width: 900px
+)
+and
+(
+  max-width: 1280px
+) {
+
+  nav {
+    bottom:
+      max(
+        14px,
+        env(
+          safe-area-inset-bottom
+        )
+      );
+  }
+
+}
+
+
+/* =========================
+   MOVIL
+========================= */
+
+@media (
+  max-width: 600px
+) {
+
+  .nav {
+    bottom: 10px;
+
+    width:
+      calc(100% - 16px);
+
+    height: 68px;
+
+    padding:
+      7px
+      8px;
+
+    border-radius: 20px;
+  }
+
+
+  .nav a {
+    min-height: 48px;
+
+    font-size: 17px;
+  }
+
+
+  .nav a span {
+    font-size: 9px;
+  }
+
+
+  .nav .create {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 16px;
+
+    font-size: 27px;
+  }
+
+}

@@ -1,0 +1,778 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   PAGINA
+========================= */
+
+.profile-page {
+  position: relative;
+
+  overflow-x: hidden;
+}
+
+
+.profile {
+  max-width: 950px;
+}
+
+
+/* =========================
+   HERO PERFIL
+========================= */
+
+.profile-hero {
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 220px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 30px;
+
+  padding:
+    32px
+    36px;
+
+  border:
+    1px solid
+    rgba(147,197,253,.32);
+
+  border-radius: 28px;
+
+  background:
+
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(94,229,183,.26),
+      transparent 32%
+    ),
+
+    radial-gradient(
+      circle at 70% 100%,
+      rgba(86,204,242,.24),
+      transparent 34%
+    ),
+
+    linear-gradient(
+      135deg,
+      #16324f 0%,
+      #1f4e79 55%,
+      #176b70 100%
+    );
+
+  box-shadow:
+    0 20px 50px
+    rgba(22,50,79,.20);
+}
+
+
+.profile-hero::after {
+  content: '';
+
+  position: absolute;
+
+  width: 260px;
+  height: 260px;
+
+  right: -105px;
+  top: -120px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.10);
+
+  border-radius: 50%;
+}
+
+
+.profile-main {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.avatar {
+  width: 88px;
+  height: 88px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border:
+    2px solid
+    rgba(255,255,255,.75);
+
+  border-radius: 26px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #2f80ed 55%,
+      #10b981
+    );
+
+  font-size: 28px;
+
+  font-weight: 1000;
+
+  box-shadow:
+    0 14px 32px
+    rgba(0,0,0,.18);
+}
+
+
+/* =========================
+   INFO PERFIL
+========================= */
+
+.profile-info {
+  min-width: 0;
+}
+
+
+.profile-info .eyebrow {
+  margin:
+    0
+    0
+    5px;
+
+  color: #93c5fd;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .17em;
+}
+
+
+.profile-info h1 {
+  margin:
+    0
+    0
+    5px;
+
+  color: #ffffff;
+
+  font-size:
+    clamp(
+      30px,
+      4vw,
+      42px
+    );
+
+  letter-spacing:
+    -.03em;
+}
+
+
+.email {
+  margin:
+    0
+    0
+    11px;
+
+  color: #dbeafe;
+
+  font-size: 14px;
+}
+
+
+.citizen-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding:
+    7px
+    11px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.16);
+
+  border-radius: 999px;
+
+  color: #a7f3d0;
+
+  background:
+    rgba(255,255,255,.09);
+
+  font-size: 10px;
+
+  font-weight: 900;
+}
+
+
+/* =========================
+   HIGHLIGHT PERFIL
+========================= */
+
+.profile-highlight {
+  position: relative;
+
+  z-index: 2;
+
+  min-width: 180px;
+
+  padding:
+    20px
+    22px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  border-radius: 20px;
+
+  background:
+    rgba(255,255,255,.10);
+
+  backdrop-filter:
+    blur(12px);
+
+  box-shadow:
+    0 14px 32px
+    rgba(0,0,0,.10);
+}
+
+
+.profile-highlight span,
+.profile-highlight strong,
+.profile-highlight small {
+  display: block;
+}
+
+
+.profile-highlight span {
+  color: #dbeafe;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: .08em;
+}
+
+
+.profile-highlight strong {
+  margin:
+    5px
+    0;
+
+  color: #ffffff;
+
+  font-size: 36px;
+}
+
+
+.profile-highlight small {
+  color: #a7f3d0;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   ESTADISTICAS
+========================= */
+
+.stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+
+  margin-top: 16px;
+}
+
+
+.stat-card {
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 120px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 19px;
+
+  border:
+    1px solid
+    #d0dfeb;
+
+  border-radius: 19px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 8px 24px
+    rgba(22,50,79,.065);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+
+.stat-card::after {
+  content: '';
+
+  position: absolute;
+
+  width: 75px;
+  height: 75px;
+
+  right: -28px;
+  bottom: -32px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+
+  opacity: .06;
+}
+
+
+.stat-card:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 14px 30px
+    rgba(22,50,79,.11);
+}
+
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  font-size: 19px;
+}
+
+
+.stat-card b {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 29px;
+}
+
+
+.stat-card span {
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.stat-reports {
+  color: #2563eb;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #eff6ff
+    );
+}
+
+
+.stat-reports .stat-icon {
+  color: #2563eb;
+
+  background: #dbeafe;
+}
+
+
+.stat-resolved {
+  color: #059669;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #ecfdf5
+    );
+}
+
+
+.stat-resolved .stat-icon {
+  color: #047857;
+
+  background: #d1fae5;
+}
+
+
+.stat-supports {
+  color: #7c3aed;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f5f3ff
+    );
+}
+
+
+.stat-supports .stat-icon {
+  color: #7c3aed;
+
+  background: #ede9fe;
+}
+
+
+.stat-points {
+  color: #d97706;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fffbeb
+    );
+}
+
+
+.stat-points .stat-icon {
+  color: #b45309;
+
+  background: #fef3c7;
+}
+
+
+/* =========================
+   OPCIONES
+========================= */
+
+.profile-options {
+  margin-top: 31px;
+}
+
+
+.section-heading {
+  margin-bottom: 14px;
+}
+
+
+.section-heading span {
+  color: #2f80ed;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .15em;
+}
+
+
+.section-heading h2 {
+  margin:
+    4px
+    0
+    0;
+
+  color: #16324f;
+
+  font-size: 22px;
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.menu {
+  overflow: hidden;
+
+  border:
+    1px solid
+    #c9d8e6;
+
+  border-radius: 21px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 10px 28px
+    rgba(22,50,79,.07);
+}
+
+
+.menu-item {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+
+  align-items: center;
+
+  gap: 15px;
+
+  min-height: 82px;
+
+  padding:
+    14px
+    18px;
+
+  border-bottom:
+    1px solid
+    #e2e8f0;
+
+  transition:
+    background .2s ease,
+    padding-left .2s ease;
+}
+
+
+.menu-item:last-child {
+  border-bottom: 0;
+}
+
+
+.menu-item:hover {
+  padding-left: 22px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #eff6ff,
+      #f8fbff
+    );
+}
+
+
+/* =========================
+   ICONOS MENU
+========================= */
+
+.menu-icon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  font-size: 18px;
+}
+
+
+.notifications-icon {
+  background: #fef3c7;
+}
+
+
+.impact-icon {
+  color: #2563eb;
+
+  background: #dbeafe;
+}
+
+
+.settings-icon {
+  color: #475569;
+
+  background: #e2e8f0;
+}
+
+
+/* =========================
+   TEXTO MENU
+========================= */
+
+.menu-copy {
+  display: grid;
+
+  gap: 3px;
+}
+
+
+.menu-copy strong {
+  color: #16324f;
+
+  font-size: 14px;
+}
+
+
+.menu-copy small {
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+
+.menu-arrow {
+  color: #94a3b8;
+
+  font-size: 22px;
+
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+
+.menu-item:hover
+.menu-arrow {
+  color: #2563eb;
+
+  transform:
+    translateX(3px);
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (
+  max-width: 800px
+) {
+
+  .stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 650px
+) {
+
+  .profile-hero {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding:
+      25px
+      21px;
+
+    border-radius: 22px;
+  }
+
+
+  .profile-highlight {
+    width: 100%;
+  }
+
+
+  .profile-main {
+    align-items: flex-start;
+  }
+
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+
+    border-radius: 21px;
+
+    font-size: 23px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE PEQUEÑO
+========================= */
+
+@media (
+  max-width: 480px
+) {
+
+  .stats {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .stat-card {
+    min-height: 105px;
+  }
+
+
+  .profile-main {
+    flex-direction: column;
+  }
+
+
+  .menu-item {
+    grid-template-columns:
+      auto
+      1fr;
+  }
+
+
+  .menu-arrow {
+    display: none;
+  }
+
+}

@@ -1,0 +1,228 @@
+<main class="page settings-page">
+
+  <div class="container settings">
+
+    <section class="settings-hero">
+
+      <div>
+
+        <p class="eyebrow">
+          {{ t('settings.eyebrow') }}
+        </p>
+
+        <h1>
+          {{ t('settings.title') }}
+        </h1>
+
+        <p>
+          {{ t('settings.subtitle') }}
+        </p>
+
+      </div>
+
+      <div class="settings-hero-icon">
+        ⚙
+      </div>
+
+    </section>
+
+
+    <section class="settings-section">
+
+      <div class="section-heading">
+
+        <span>
+          {{ t('settings.experience') }}
+        </span>
+
+        <h2>
+          {{ t('settings.preferences') }}
+        </h2>
+
+      </div>
+
+
+      <div class="group">
+
+        <!-- MODO OSCURO -->
+
+        <div class="setting-row">
+
+          <div class="setting-left">
+
+            <div class="setting-icon theme-icon">
+              🌙
+            </div>
+
+            <div class="setting-copy">
+
+              <strong>
+                {{ t('settings.darkMode') }}
+              </strong>
+
+              <small>
+                {{ t('settings.darkModeDescription') }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="switch-wrapper">
+
+            <input
+              id="darkMode"
+              type="checkbox"
+              [(ngModel)]="dark"
+            />
+
+            <label
+              for="darkMode"
+              class="switch"
+            >
+              <span></span>
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- IDIOMA -->
+
+        <div class="setting-row">
+
+          <div class="setting-left">
+
+            <div class="setting-icon language-icon">
+              🌎
+            </div>
+
+            <div class="setting-copy">
+
+              <strong>
+                {{ t('settings.language') }}
+              </strong>
+
+              <small>
+                {{ t('settings.languageDescription') }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <select [(ngModel)]="language">
+
+            <option value="Español">
+              Español
+            </option>
+
+            <option value="English">
+              English
+            </option>
+
+            <option value="Português">
+              Português
+            </option>
+
+            <option value="Français">
+              Français
+            </option>
+
+            <option value="Русский">
+              Русский
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- PRIVACIDAD -->
+
+        <div class="setting-row">
+
+          <div class="setting-left">
+
+            <div class="setting-icon privacy-icon">
+              🔒
+            </div>
+
+            <div class="setting-copy">
+
+              <strong>
+                {{ t('settings.privacy') }}
+              </strong>
+
+              <small>
+                {{ t('settings.privacyDescription') }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <select [(ngModel)]="privacy">
+
+            <option value="Estándar">
+              {{ t('settings.standard') }}
+            </option>
+
+            <option value="Alta">
+              {{ t('settings.high') }}
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="account-section">
+
+      <div>
+
+        <span>
+          {{ t('settings.account') }}
+        </span>
+
+        <h2>
+          {{ t('settings.session') }}
+        </h2>
+
+        <p>
+          {{ t('settings.sessionDescription') }}
+        </p>
+
+      </div>
+
+
+      <button
+        class="logout"
+        type="button"
+        (click)="logout()"
+      >
+
+        <span>
+          ↪
+        </span>
+
+        {{ t('settings.logout') }}
+
+      </button>
+
+    </section>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

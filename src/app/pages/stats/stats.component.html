@@ -1,0 +1,386 @@
+<main class="page impact-page">
+
+  <div class="container">
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section class="impact-hero">
+
+      <div class="impact-hero-copy">
+
+        <p class="eyebrow">
+          {{ t('stats.contribution') }}
+        </p>
+
+        <h1>
+          {{ t('stats.title') }}
+        </h1>
+
+        <p>
+          {{ t('stats.description') }}
+        </p>
+
+      </div>
+
+
+      <div class="impact-highlight">
+
+        <span>
+          {{ t('stats.resolutionRate') }}
+        </span>
+
+        <strong>
+          {{ resolutionRate }}%
+        </strong>
+
+        <small>
+          {{ t('stats.basedOnReports') }}
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         KPIs
+    ========================== -->
+
+    <section class="stats">
+
+      <article class="stat-card stat-total">
+
+        <div class="stat-icon">
+          ◉
+        </div>
+
+        <div>
+
+          <b>
+            {{ totalReports }}
+          </b>
+
+          <span>
+            {{ t('stats.reports') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-progress">
+
+        <div class="stat-icon">
+          ◷
+        </div>
+
+        <div>
+
+          <b>
+            {{ inProgress }}
+          </b>
+
+          <span>
+            {{ t('stats.inProgress') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-resolved">
+
+        <div class="stat-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <b>
+            {{ resolved }}
+          </b>
+
+          <span>
+            {{ t('stats.resolved') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-rate">
+
+        <div class="stat-icon">
+          ↗
+        </div>
+
+        <div>
+
+          <b>
+            {{ resolutionRate }}%
+          </b>
+
+          <span>
+            {{ t('stats.resolutionRate') }}
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =========================
+         ANALISIS
+    ========================== -->
+
+    <section class="lower">
+
+      <!-- CATEGORIAS -->
+
+      <article class="chart category-chart">
+
+        <div class="chart-header">
+
+          <div>
+
+            <span>
+              {{ t('stats.distribution') }}
+            </span>
+
+            <h3>
+              {{ t('stats.byCategory') }}
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="category-layout">
+
+          <div
+            class="donut"
+            [style.background]="getDonutBackground()"
+          >
+
+            <div class="donut-center">
+
+              <strong>
+                {{ totalReports }}
+              </strong>
+
+              <small>
+                {{ t('stats.reports') }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <ul class="category-list">
+
+            <li>
+
+              <div class="category-name">
+
+                <span class="dot streets"></span>
+
+                <div>
+
+                  <strong>
+                    {{ t('stats.streets') }}
+                  </strong>
+
+                  <small>
+                    {{ t('stats.streetsDescription') }}
+                  </small>
+
+                </div>
+
+              </div>
+
+              <b>
+                {{ percentage(streets) }}%
+              </b>
+
+            </li>
+
+
+            <li>
+
+              <div class="category-name">
+
+                <span class="dot lighting"></span>
+
+                <div>
+
+                  <strong>
+                    {{ t('stats.lighting') }}
+                  </strong>
+
+                  <small>
+                    {{ t('stats.lightingDescription') }}
+                  </small>
+
+                </div>
+
+              </div>
+
+              <b>
+                {{ percentage(lighting) }}%
+              </b>
+
+            </li>
+
+
+            <li>
+
+              <div class="category-name">
+
+                <span class="dot cleaning"></span>
+
+                <div>
+
+                  <strong>
+                    {{ t('stats.cleaning') }}
+                  </strong>
+
+                  <small>
+                    {{ t('stats.cleaningDescription') }}
+                  </small>
+
+                </div>
+
+              </div>
+
+              <b>
+                {{ percentage(cleaning) }}%
+              </b>
+
+            </li>
+
+
+            <li>
+
+              <div class="category-name">
+
+                <span class="dot others"></span>
+
+                <div>
+
+                  <strong>
+                    {{ t('stats.others') }}
+                  </strong>
+
+                  <small>
+                    {{ t('stats.othersDescription') }}
+                  </small>
+
+                </div>
+
+              </div>
+
+              <b>
+                {{ percentage(others) }}%
+              </b>
+
+            </li>
+
+          </ul>
+
+        </div>
+
+      </article>
+
+
+      <!-- EVOLUCION -->
+
+      <article class="chart evolution-chart">
+
+        <div class="chart-header">
+
+          <div>
+
+            <span>
+              {{ t('stats.activity') }}
+            </span>
+
+            <h3>
+              {{ t('stats.evolution') }}
+            </h3>
+
+          </div>
+
+
+          <div class="trend-badge">
+            {{ t('stats.realData') }}
+          </div>
+
+        </div>
+
+
+        <div class="bars-wrapper">
+
+          <div class="bars">
+
+            <i
+              *ngFor="let bar of bars"
+              [style.height.%]="bar"
+            ></i>
+
+          </div>
+
+        </div>
+
+
+        <div class="chart-message">
+
+          <div class="message-icon">
+            ✦
+          </div>
+
+          <p>
+
+            <span
+              *ngIf="
+                totalReports === 0
+              "
+            >
+
+              {{ t('stats.noData') }}
+
+            </span>
+
+
+            <span
+              *ngIf="
+                totalReports > 0
+              "
+            >
+
+              {{ t('stats.autoUpdate') }}
+
+            </span>
+
+          </p>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

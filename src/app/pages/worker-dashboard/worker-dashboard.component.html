@@ -1,0 +1,448 @@
+<main class="worker-page">
+
+  <div class="worker-container">
+
+    <header class="worker-header">
+
+      <div>
+
+        <p class="eyebrow">
+          GUAYALINK TRABAJADOR
+        </p>
+
+        <h1>
+          Mis trabajos
+        </h1>
+
+        <p class="subtitle">
+          {{ workerEmail }}
+        </p>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="refresh-button"
+          (click)="refresh()"
+        >
+          ↻ Actualizar
+        </button>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()"
+        >
+          Cerrar sesión
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <section class="summary-grid">
+
+      <article
+        class="summary-card"
+        [class.active]="activeTab === 'asignado'"
+        (click)="setTab('asignado')"
+      >
+
+        <span>
+          Asignados
+        </span>
+
+        <strong>
+          {{ countStatus('asignado') }}
+        </strong>
+
+      </article>
+
+
+      <article
+        class="summary-card"
+        [class.active]="activeTab === 'en_proceso'"
+        (click)="setTab('en_proceso')"
+      >
+
+        <span>
+          En proceso
+        </span>
+
+        <strong>
+          {{ countStatus('en_proceso') }}
+        </strong>
+
+      </article>
+
+
+      <article
+        class="summary-card"
+        [class.active]="activeTab === 'pendiente_confirmacion'"
+        (click)="setTab('pendiente_confirmacion')"
+      >
+
+        <span>
+          Por confirmar
+        </span>
+
+        <strong>
+          {{ countStatus('pendiente_confirmacion') }}
+        </strong>
+
+      </article>
+
+
+      <article
+        class="summary-card"
+        [class.active]="activeTab === 'resuelto'"
+        (click)="setTab('resuelto')"
+      >
+
+        <span>
+          Resueltos
+        </span>
+
+        <strong>
+          {{ countStatus('resuelto') }}
+        </strong>
+
+      </article>
+
+    </section>
+
+
+    <section class="tabs">
+
+      <button
+        type="button"
+        [class.active]="activeTab === 'asignado'"
+        (click)="setTab('asignado')"
+      >
+        Asignados
+        <span>{{ countStatus('asignado') }}</span>
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="activeTab === 'en_proceso'"
+        (click)="setTab('en_proceso')"
+      >
+        En proceso
+        <span>{{ countStatus('en_proceso') }}</span>
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="activeTab === 'pendiente_confirmacion'"
+        (click)="setTab('pendiente_confirmacion')"
+      >
+        Por confirmar
+        <span>{{ countStatus('pendiente_confirmacion') }}</span>
+      </button>
+
+
+      <button
+        type="button"
+        [class.active]="activeTab === 'resuelto'"
+        (click)="setTab('resuelto')"
+      >
+        Resueltos
+        <span>{{ countStatus('resuelto') }}</span>
+      </button>
+
+    </section>
+
+
+    <div
+      class="loading-card"
+      *ngIf="loading"
+    >
+      Cargando trabajos...
+    </div>
+
+
+    <section
+      class="empty-state"
+      *ngIf="
+        !loading &&
+        filteredReports.length === 0
+      "
+    >
+
+      <div class="empty-icon">
+        ✓
+      </div>
+
+      <h2>
+        No hay trabajos en esta sección
+      </h2>
+
+      <p>
+        Los trabajos aparecerán aquí
+        cuando cambien de estado.
+      </p>
+
+    </section>
+
+
+    <section
+      class="jobs-list"
+      *ngIf="
+        !loading &&
+        filteredReports.length > 0
+      "
+    >
+
+      <article
+        class="job-card"
+        *ngFor="let report of filteredReports"
+      >
+
+        <div class="job-top">
+
+          <div class="badges">
+
+            <span
+              class="priority-badge"
+              [attr.data-priority]="report.priority"
+            >
+              {{ getPriorityLabel(report.priority) }}
+            </span>
+
+            <span class="category-badge">
+              {{ report.category }}
+            </span>
+
+            <span class="status-badge">
+
+              {{
+                report.status === 'asignado'
+                  ? 'Asignado'
+                  : report.status === 'en_proceso'
+                    ? 'En proceso'
+                    : report.status === 'pendiente_confirmacion'
+                      ? 'Esperando ciudadano'
+                      : 'Resuelto'
+              }}
+
+            </span>
+
+          </div>
+
+
+          <span class="progress-number">
+            {{ report.progress }}%
+          </span>
+
+        </div>
+
+
+        <h2>
+          {{ report.title }}
+        </h2>
+
+
+        <p class="description">
+          {{ report.description }}
+        </p>
+
+
+        <div class="location-card">
+
+          <div class="location-icon">
+            📍
+          </div>
+
+          <div>
+
+            <small>
+              Ubicación
+            </small>
+
+            <strong>
+              {{ report.location }}
+            </strong>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="maps-button"
+            (click)="openMaps(report)"
+          >
+            Abrir mapa
+          </button>
+
+        </div>
+
+
+        <div class="progress-bar">
+
+          <div
+            [style.width.%]="report.progress"
+          ></div>
+
+        </div>
+
+
+        <section class="timeline">
+
+          <div class="timeline-item completed">
+
+            <div class="dot"></div>
+
+            <div>
+
+              <small>
+                Asignado
+              </small>
+
+              <strong>
+                {{ formatDate(report.assignedAt) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="timeline-item"
+            [class.completed]="report.startedAt"
+          >
+
+            <div class="dot"></div>
+
+            <div>
+
+              <small>
+                Trabajo iniciado
+              </small>
+
+              <strong>
+                {{ formatDate(report.startedAt) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="timeline-item"
+            [class.completed]="report.workerCompletedAt"
+          >
+
+            <div class="dot"></div>
+
+            <div>
+
+              <small>
+                Trabajo terminado
+              </small>
+
+              <strong>
+                {{ formatDate(report.workerCompletedAt) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="timeline-item"
+            [class.completed]="report.resolvedAt"
+          >
+
+            <div class="dot"></div>
+
+            <div>
+
+              <small>
+                Ciudadano confirmó
+              </small>
+
+              <strong>
+                {{ formatDate(report.resolvedAt) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="job-actions">
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="openReport(report.id)"
+          >
+            Ver detalles
+          </button>
+
+
+          <button
+            *ngIf="report.status === 'asignado'"
+            type="button"
+            class="start-button"
+            (click)="startWork(report)"
+            [disabled]="updatingId === report.id"
+          >
+            Empezar trabajo
+          </button>
+
+
+          <button
+            *ngIf="report.status === 'en_proceso'"
+            type="button"
+            class="resolve-button"
+            (click)="resolveReport(report)"
+            [disabled]="updatingId === report.id"
+          >
+            ✓ Trabajo terminado
+          </button>
+
+
+          <div
+            class="waiting-message"
+            *ngIf="
+              report.status ===
+              'pendiente_confirmacion'
+            "
+          >
+            ⏳ Esperando confirmación del ciudadano
+          </div>
+
+
+          <div
+            class="resolved-message"
+            *ngIf="
+              report.status ===
+              'resuelto'
+            "
+          >
+            ✓ Ciudadano confirmó la solución
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+</main>

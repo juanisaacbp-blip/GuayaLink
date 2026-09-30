@@ -1,0 +1,674 @@
+<main class="admin-page">
+
+  <div class="admin-container">
+
+    <!-- HEADER -->
+
+    <header class="admin-header">
+
+      <div>
+
+        <p class="eyebrow">
+          GUAYALINK ADMIN
+        </p>
+
+        <h1>
+          Centro de operaciones
+        </h1>
+
+        <p class="subtitle">
+          Supervisa, prioriza y asigna
+          los problemas de la ciudad.
+        </p>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="refresh-button"
+          (click)="refresh()"
+        >
+          ↻ Actualizar
+        </button>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()"
+        >
+          Cerrar sesión
+        </button>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- ESTADÍSTICAS -->
+
+    <section class="stats-grid">
+
+      <article class="stat-card">
+
+        <span>
+          Total
+        </span>
+
+        <strong>
+          {{ reports.length }}
+        </strong>
+
+      </article>
+
+
+      <article class="stat-card urgent-card">
+
+        <span>
+          Urgentes
+        </span>
+
+        <strong>
+          {{ countPriority('urgente') }}
+        </strong>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <span>
+          Pendientes
+        </span>
+
+        <strong>
+          {{ countStatus('pendiente') }}
+        </strong>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <span>
+          Sin asignar
+        </span>
+
+        <strong>
+          {{ getUnassignedCount() }}
+        </strong>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <span>
+          En proceso
+        </span>
+
+        <strong>
+          {{ countStatus('en_proceso') }}
+        </strong>
+
+      </article>
+
+
+      <article class="stat-card resolved-card">
+
+        <span>
+          Resueltos
+        </span>
+
+        <strong>
+          {{ countStatus('resuelto') }}
+        </strong>
+
+      </article>
+
+    </section>
+
+
+
+    <!-- FILTROS -->
+
+    <section class="filters-card">
+
+      <div class="filter-top">
+
+        <div>
+
+          <h2>
+            Gestión de reportes
+          </h2>
+
+          <p>
+            {{ filteredReports.length }}
+            de
+            {{ reports.length }}
+            reportes visibles
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="clear-button"
+          (click)="clearFilters()"
+        >
+          Limpiar filtros
+        </button>
+
+      </div>
+
+
+      <div class="search-row">
+
+        <div class="search-box">
+
+          <span>
+            ⌕
+          </span>
+
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (ngModelChange)="applyFilters()"
+            placeholder="Buscar por título, descripción, correo, ubicación..."
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="filter-grid">
+
+        <!-- ESTADO -->
+
+        <div class="filter-field">
+
+          <label>
+            Estado
+          </label>
+
+          <select
+            [(ngModel)]="statusFilter"
+            (ngModelChange)="applyFilters()"
+          >
+
+            <option value="todos">
+              Todos
+            </option>
+
+            <option value="pendiente">
+              Pendiente
+            </option>
+
+            <option value="asignado">
+              Asignado
+            </option>
+
+            <option value="en_proceso">
+              En proceso
+            </option>
+
+            <option value="resuelto">
+              Resuelto
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- PRIORIDAD -->
+
+        <div class="filter-field">
+
+          <label>
+            Prioridad
+          </label>
+
+          <select
+            [(ngModel)]="priorityFilter"
+            (ngModelChange)="applyFilters()"
+          >
+
+            <option value="todas">
+              Todas
+            </option>
+
+            <option value="urgente">
+              Urgente
+            </option>
+
+            <option value="alta">
+              Alta
+            </option>
+
+            <option value="media">
+              Media
+            </option>
+
+            <option value="baja">
+              Baja
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- CATEGORIA -->
+
+        <div class="filter-field">
+
+          <label>
+            Categoría
+          </label>
+
+          <select
+            [(ngModel)]="categoryFilter"
+            (ngModelChange)="applyFilters()"
+          >
+
+            <option
+              *ngFor="
+                let category
+                of categories
+              "
+              [value]="category"
+            >
+
+              {{
+                category === 'todas'
+                  ? 'Todas'
+                  : category
+              }}
+
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- TRABAJADOR -->
+
+        <div class="filter-field">
+
+          <label>
+            Trabajador
+          </label>
+
+          <select
+            [(ngModel)]="workerFilter"
+            (ngModelChange)="applyFilters()"
+          >
+
+            <option value="todos">
+              Todos
+            </option>
+
+            <option value="sin_asignar">
+              Sin asignar
+            </option>
+
+            <option
+              *ngFor="
+                let worker
+                of workers
+              "
+              [value]="worker.uid"
+            >
+
+              {{
+                worker.name ||
+                worker.email
+              }}
+
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- ORDEN -->
+
+        <div class="filter-field">
+
+          <label>
+            Ordenar
+          </label>
+
+          <select
+            [(ngModel)]="sortOrder"
+            (ngModelChange)="applyFilters()"
+          >
+
+            <option value="priority">
+              Más urgente
+            </option>
+
+            <option value="newest">
+              Más reciente
+            </option>
+
+            <option value="oldest">
+              Más antiguo
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- SIN TRABAJADORES -->
+
+    <section
+      class="warning-card"
+      *ngIf="
+        !loading &&
+        workers.length === 0
+      "
+    >
+
+      <strong>
+        No hay trabajadores registrados.
+      </strong>
+
+      <p>
+        Cambia el role de una cuenta
+        a "worker" desde Firestore.
+      </p>
+
+    </section>
+
+
+
+    <!-- LOADING -->
+
+    <div
+      class="loading-card"
+      *ngIf="loading"
+    >
+
+      Cargando reportes...
+
+    </div>
+
+
+
+    <!-- SIN RESULTADOS -->
+
+    <section
+      class="empty-card"
+      *ngIf="
+        !loading &&
+        filteredReports.length === 0
+      "
+    >
+
+      <div>
+        🔎
+      </div>
+
+      <h2>
+        No encontramos reportes
+      </h2>
+
+      <p>
+        Cambia o elimina algunos filtros.
+      </p>
+
+    </section>
+
+
+
+    <!-- REPORTES -->
+
+    <section
+      class="reports-list"
+      *ngIf="
+        !loading &&
+        filteredReports.length > 0
+      "
+    >
+
+      <article
+        class="report-card"
+        *ngFor="
+          let report
+          of filteredReports
+        "
+        [class.urgent-report]="
+          report.priority ===
+          'urgente'
+        "
+      >
+
+        <div class="report-main">
+
+          <!-- BADGES -->
+
+          <div class="badges">
+
+            <span
+              class="priority-badge"
+              [attr.data-priority]="
+                report.priority
+              "
+            >
+
+              {{
+                getPriorityLabel(
+                  report.priority
+                )
+              }}
+
+            </span>
+
+
+            <span class="category-badge">
+
+              {{ report.category }}
+
+            </span>
+
+
+            <span
+              class="status-badge"
+              [attr.data-status]="
+                report.status
+              "
+            >
+
+              {{
+                getStatus(
+                  report.status
+                )
+              }}
+
+            </span>
+
+          </div>
+
+
+
+          <!-- TITULO -->
+
+          <h3>
+
+            {{ report.title }}
+
+          </h3>
+
+
+          <p class="description">
+
+            {{ report.description }}
+
+          </p>
+
+
+
+          <!-- META -->
+
+          <div class="report-meta">
+
+            <span>
+              📍
+              {{ report.location }}
+            </span>
+
+
+            <span>
+              👤
+              {{ report.userEmail }}
+            </span>
+
+
+            <span>
+              🕒
+              {{
+                formatDate(
+                  report.createdAt
+                )
+              }}
+            </span>
+
+          </div>
+
+
+
+          <!-- TRABAJADOR -->
+
+          <div
+            class="assigned-worker"
+            *ngIf="
+              report.assignedWorkerId
+            "
+          >
+
+            <span>
+              👷
+            </span>
+
+            <div>
+
+              <small>
+                Trabajador asignado
+              </small>
+
+              <strong>
+
+                {{
+                  report.assignedWorkerName ||
+                  report.assignedWorkerEmail
+                }}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- PANEL DERECHO -->
+
+        <div class="assignment-panel">
+
+          <label>
+            Asignar trabajador
+          </label>
+
+
+          <select
+            [(ngModel)]="
+              report.selectedWorkerId
+            "
+          >
+
+            <option value="">
+              Selecciona trabajador
+            </option>
+
+            <option
+              *ngFor="
+                let worker
+                of workers
+              "
+              [value]="worker.uid"
+            >
+
+              {{
+                worker.name ||
+                worker.email
+              }}
+
+            </option>
+
+          </select>
+
+
+          <button
+            type="button"
+            class="assign-button"
+            (click)="assignWorker(report)"
+            [disabled]="
+              assigningId ===
+              report.id
+            "
+          >
+
+            {{
+              assigningId === report.id
+                ? 'Asignando...'
+                : (
+                    report.assignedWorkerId
+                      ? 'Reasignar'
+                      : 'Asignar'
+                  )
+            }}
+
+          </button>
+
+
+          <button
+            type="button"
+            class="details-button"
+            (click)="
+              openReport(
+                report.id
+              )
+            "
+          >
+
+            Ver reporte
+
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </div>
+
+</main>

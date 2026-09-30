@@ -1,0 +1,773 @@
+<main class="analytics-page">
+
+  <div class="analytics-container">
+
+
+    <!-- HEADER -->
+
+    <header class="analytics-header">
+
+      <div>
+
+        <p class="eyebrow">
+          GUAYALINK INTELLIGENCE
+        </p>
+
+        <h1>
+          Analítica urbana
+        </h1>
+
+        <p class="subtitle">
+          Datos en tiempo real para entender
+          los problemas de la ciudad.
+        </p>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="operations-button"
+          (click)="goOperations()"
+        >
+          ← Operaciones
+        </button>
+
+
+        <button
+          type="button"
+          class="refresh-button"
+          (click)="loadAnalytics()"
+        >
+          ↻ Actualizar
+        </button>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()"
+        >
+          Salir
+        </button>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- LOADING -->
+
+    <section
+      class="loading-card"
+      *ngIf="loading"
+    >
+
+      Cargando información municipal...
+
+    </section>
+
+
+
+    <ng-container
+      *ngIf="!loading"
+    >
+
+
+      <!-- KPI -->
+
+      <section class="kpi-grid">
+
+
+        <article class="kpi-card">
+
+          <span>
+            Reportes totales
+          </span>
+
+          <strong>
+            {{ totalReports }}
+          </strong>
+
+          <small>
+            Registrados en GuayaLink
+          </small>
+
+        </article>
+
+
+        <article class="kpi-card urgent">
+
+          <span>
+            Urgentes
+          </span>
+
+          <strong>
+            {{ urgentReports }}
+          </strong>
+
+          <small>
+            Requieren atención prioritaria
+          </small>
+
+        </article>
+
+
+        <article class="kpi-card progress">
+
+          <span>
+            En proceso
+          </span>
+
+          <strong>
+            {{ inProgressReports }}
+          </strong>
+
+          <small>
+            Trabajos activos
+          </small>
+
+        </article>
+
+
+        <article class="kpi-card resolved">
+
+          <span>
+            Resueltos
+          </span>
+
+          <strong>
+            {{ resolvedReports }}
+          </strong>
+
+          <small>
+            Problemas solucionados
+          </small>
+
+        </article>
+
+
+        <article class="kpi-card rate">
+
+          <span>
+            Resolución
+          </span>
+
+          <strong>
+            {{ resolutionRate }}%
+          </strong>
+
+          <small>
+            Tasa total de resolución
+          </small>
+
+        </article>
+
+      </section>
+
+
+
+      <!-- INSIGHTS -->
+
+      <section class="insights-grid">
+
+        <article>
+
+          <span class="insight-icon">
+            ◉
+          </span>
+
+          <div>
+
+            <small>
+              Mayor problemática
+            </small>
+
+            <strong>
+              {{ topCategory }}
+            </strong>
+
+          </div>
+
+        </article>
+
+
+        <article>
+
+          <span class="insight-icon">
+            📍
+          </span>
+
+          <div>
+
+            <small>
+              Zona más afectada
+            </small>
+
+            <strong>
+              {{ topZone }}
+            </strong>
+
+          </div>
+
+        </article>
+
+
+        <article>
+
+          <span class="insight-icon">
+            👷
+          </span>
+
+          <div>
+
+            <small>
+              Trabajadores activos
+            </small>
+
+            <strong>
+              {{ workers.length }}
+            </strong>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+
+      <!-- PRIMERA FILA -->
+
+      <section class="analysis-grid">
+
+
+        <!-- ESTADOS -->
+
+        <article class="panel">
+
+          <div class="panel-title">
+
+            <div>
+
+              <h2>
+                Estado de reportes
+              </h2>
+
+              <p>
+                Distribución actual
+                de todos los casos.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="status-chart">
+
+            <div
+              class="donut"
+              [style.background]="
+                getStatusDonut()
+              "
+            >
+
+              <div class="donut-hole">
+
+                <strong>
+                  {{ totalReports }}
+                </strong>
+
+                <span>
+                  Total
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="status-legend">
+
+
+              <div>
+
+                <span class="legend-dot pending"></span>
+
+                <p>
+                  Pendientes
+                </p>
+
+                <strong>
+                  {{ pendingReports }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span class="legend-dot assigned"></span>
+
+                <p>
+                  Asignados
+                </p>
+
+                <strong>
+                  {{ assignedReports }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span class="legend-dot working"></span>
+
+                <p>
+                  En proceso
+                </p>
+
+                <strong>
+                  {{ inProgressReports }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span class="legend-dot done"></span>
+
+                <p>
+                  Resueltos
+                </p>
+
+                <strong>
+                  {{ resolvedReports }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- CATEGORIAS -->
+
+        <article class="panel">
+
+          <div class="panel-title">
+
+            <div>
+
+              <h2>
+                Problemas por categoría
+              </h2>
+
+              <p>
+                Qué tipos de incidencias
+                son más comunes.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="bar-list">
+
+            <div
+              class="bar-item"
+              *ngFor="
+                let category
+                of categories
+              "
+            >
+
+              <div class="bar-heading">
+
+                <span>
+                  {{ category.name }}
+                </span>
+
+                <strong>
+                  {{ category.count }}
+                </strong>
+
+              </div>
+
+
+              <div class="bar-track">
+
+                <div
+                  [style.width.%]="
+                    category.percentage
+                  "
+                ></div>
+
+              </div>
+
+
+              <small>
+                {{ category.percentage }}%
+              </small>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+
+      <!-- PRIORIDAD + ZONAS -->
+
+      <section class="analysis-grid">
+
+
+        <article class="panel">
+
+          <div class="panel-title">
+
+            <div>
+
+              <h2>
+                Nivel de prioridad
+              </h2>
+
+              <p>
+                Distribución según gravedad.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="priority-grid">
+
+            <article
+              *ngFor="
+                let priority
+                of priorities
+              "
+              [attr.data-priority]="
+                priority.key
+              "
+            >
+
+              <span>
+                {{ priority.name }}
+              </span>
+
+              <strong>
+                {{ priority.count }}
+              </strong>
+
+              <small>
+                {{ priority.percentage }}%
+              </small>
+
+            </article>
+
+          </div>
+
+        </article>
+
+
+
+        <article class="panel">
+
+          <div class="panel-title">
+
+            <div>
+
+              <h2>
+                Zonas críticas
+              </h2>
+
+              <p>
+                Sectores con mayor
+                número de reportes.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="zone-empty"
+            *ngIf="
+              zones.length === 0
+            "
+          >
+            Todavía no hay datos suficientes.
+          </div>
+
+
+          <div
+            class="zone-list"
+            *ngIf="
+              zones.length > 0
+            "
+          >
+
+            <div
+              class="zone"
+              *ngFor="
+                let zone of zones;
+                let i = index
+              "
+            >
+
+              <span class="zone-position">
+                {{ i + 1 }}
+              </span>
+
+
+              <div class="zone-main">
+
+                <div>
+
+                  <strong>
+                    {{ zone.name }}
+                  </strong>
+
+                  <span>
+                    {{ zone.count }}
+                    reportes
+                  </span>
+
+                </div>
+
+
+                <div class="zone-track">
+
+                  <div
+                    [style.width.%]="
+                      zone.percentage
+                    "
+                  ></div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+
+      <!-- TRABAJADORES -->
+
+      <section class="panel full-panel">
+
+        <div class="panel-title">
+
+          <div>
+
+            <h2>
+              Rendimiento operativo
+            </h2>
+
+            <p>
+              Trabajos asignados y resueltos
+              por cada trabajador.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="worker-empty"
+          *ngIf="
+            workers.length === 0
+          "
+        >
+
+          Todavía no hay trabajadores
+          con reportes asignados.
+
+        </div>
+
+
+        <div
+          class="worker-table"
+          *ngIf="
+            workers.length > 0
+          "
+        >
+
+          <div class="worker-table-header">
+
+            <span>
+              Trabajador
+            </span>
+
+            <span>
+              Asignados
+            </span>
+
+            <span>
+              Resueltos
+            </span>
+
+            <span>
+              Efectividad
+            </span>
+
+          </div>
+
+
+          <div
+            class="worker-row"
+            *ngFor="
+              let worker of workers
+            "
+          >
+
+            <strong>
+              {{ worker.name }}
+            </strong>
+
+
+            <span>
+              {{ worker.assigned }}
+            </span>
+
+
+            <span>
+              {{ worker.resolved }}
+            </span>
+
+
+            <span>
+
+              {{
+                worker.assigned > 0
+                  ? (
+                      worker.resolved /
+                      worker.assigned *
+                      100
+                    ).toFixed(0)
+                  : 0
+              }}%
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ACTIVIDAD -->
+
+      <section class="panel full-panel">
+
+        <div class="panel-title">
+
+          <div>
+
+            <h2>
+              Actividad reciente
+            </h2>
+
+            <p>
+              Últimos problemas reportados
+              en la plataforma.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="activity-list">
+
+
+          <article
+            *ngFor="
+              let report
+              of getRecentReports()
+            "
+            (click)="
+              openReport(
+                report.id
+              )
+            "
+          >
+
+            <div class="activity-icon">
+
+              !
+
+            </div>
+
+
+            <div class="activity-info">
+
+              <span>
+                {{ report.category }}
+              </span>
+
+              <strong>
+                {{ report.title }}
+              </strong>
+
+              <small>
+                {{
+                  formatDate(
+                    report.createdAt
+                  )
+                }}
+              </small>
+
+            </div>
+
+
+            <div
+              class="activity-priority"
+              [attr.data-priority]="
+                report.priority
+              "
+            >
+
+              {{ report.priority }}
+
+            </div>
+
+          </article>
+
+
+        </div>
+
+      </section>
+
+
+    </ng-container>
+
+  </div>
+
+</main>

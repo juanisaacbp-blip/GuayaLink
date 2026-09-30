@@ -1,0 +1,265 @@
+<main class="page profile-page">
+
+  <div class="container profile">
+
+    <!-- =========================
+         HERO PERFIL
+    ========================== -->
+
+    <section class="profile-hero">
+
+      <div class="profile-main">
+
+        <div class="avatar">
+          {{ initials }}
+        </div>
+
+
+        <div class="profile-info">
+
+          <p class="eyebrow">
+            {{ t('profile.eyebrow') }}
+          </p>
+
+          <h1>
+            {{ userName }}
+          </h1>
+
+          <p class="email">
+            {{ userEmail }}
+          </p>
+
+          <span class="citizen-badge">
+            {{ t('profile.citizen') }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="profile-highlight">
+
+        <span>
+          {{ t('profile.participation') }}
+        </span>
+
+        <strong>
+          {{ totalReports }}
+        </strong>
+
+        <small>
+          {{ t('profile.reportsCreated') }}
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ESTADISTICAS
+    ========================== -->
+
+    <section class="stats">
+
+      <article class="stat-card stat-reports">
+
+        <div class="stat-icon">
+          ◉
+        </div>
+
+        <div>
+
+          <b>
+            {{ totalReports }}
+          </b>
+
+          <span>
+            {{ t('profile.reports') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-resolved">
+
+        <div class="stat-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <b>
+            {{ resolvedReports }}
+          </b>
+
+          <span>
+            {{ t('profile.resolved') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-supports">
+
+        <div class="stat-icon">
+          ♥
+        </div>
+
+        <div>
+
+          <b>
+            {{ supports }}
+          </b>
+
+          <span>
+            {{ t('profile.supports') }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card stat-points">
+
+        <div class="stat-icon">
+          ✦
+        </div>
+
+        <div>
+
+          <b>
+            {{ points }}
+          </b>
+
+          <span>
+            {{ t('profile.points') }}
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =========================
+         OPCIONES
+    ========================== -->
+
+    <section class="profile-options">
+
+      <div class="section-heading">
+
+        <span>
+          {{ t('profile.account') }}
+        </span>
+
+        <h2>
+          {{ t('profile.space') }}
+        </h2>
+
+      </div>
+
+
+      <div class="menu">
+
+        <a
+          routerLink="/notificaciones"
+          class="menu-item"
+        >
+
+          <div class="menu-icon notifications-icon">
+            🔔
+          </div>
+
+          <div class="menu-copy">
+
+            <strong>
+              {{ t('profile.notifications') }}
+            </strong>
+
+            <small>
+              {{ t('profile.notificationsDescription') }}
+            </small>
+
+          </div>
+
+          <b class="menu-arrow">
+            →
+          </b>
+
+        </a>
+
+
+        <a
+          routerLink="/estadisticas"
+          class="menu-item"
+        >
+
+          <div class="menu-icon impact-icon">
+            ▥
+          </div>
+
+          <div class="menu-copy">
+
+            <strong>
+              {{ t('profile.impact') }}
+            </strong>
+
+            <small>
+              {{ t('profile.impactDescription') }}
+            </small>
+
+          </div>
+
+          <b class="menu-arrow">
+            →
+          </b>
+
+        </a>
+
+
+        <a
+          routerLink="/configuracion"
+          class="menu-item"
+        >
+
+          <div class="menu-icon settings-icon">
+            ⚙
+          </div>
+
+          <div class="menu-copy">
+
+            <strong>
+              {{ t('profile.settings') }}
+            </strong>
+
+            <small>
+              {{ t('profile.settingsDescription') }}
+            </small>
+
+          </div>
+
+          <b class="menu-arrow">
+            →
+          </b>
+
+        </a>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <app-nav />
+
+</main>

@@ -1,0 +1,661 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================
+   PAGINA
+========================= */
+
+.settings-page {
+  position: relative;
+
+  overflow-x: hidden;
+}
+
+
+.settings {
+  max-width: 900px;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.settings-hero {
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 190px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 25px;
+
+  padding:
+    30px
+    34px;
+
+  margin-bottom: 24px;
+
+  border:
+    1px solid
+    rgba(147,197,253,.30);
+
+  border-radius: 26px;
+
+  background:
+
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(94,229,183,.24),
+      transparent 33%
+    ),
+
+    radial-gradient(
+      circle at 70% 100%,
+      rgba(86,204,242,.22),
+      transparent 34%
+    ),
+
+    linear-gradient(
+      135deg,
+      #16324f 0%,
+      #1f4e79 58%,
+      #176b70 100%
+    );
+
+  box-shadow:
+    0 18px 44px
+    rgba(22,50,79,.18);
+}
+
+
+.settings-hero::after {
+  content: '';
+
+  position: absolute;
+
+  width: 240px;
+  height: 240px;
+
+  right: -90px;
+  top: -110px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.10);
+
+  border-radius: 50%;
+}
+
+
+.settings-hero > div:first-child {
+  position: relative;
+
+  z-index: 2;
+}
+
+
+.settings-hero .eyebrow {
+  margin:
+    0
+    0
+    7px;
+
+  color: #93c5fd;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .18em;
+}
+
+
+.settings-hero h1 {
+  margin:
+    0
+    0
+    8px;
+
+  color: #ffffff;
+
+  font-size:
+    clamp(
+      34px,
+      5vw,
+      48px
+    );
+
+  letter-spacing:
+    -.035em;
+}
+
+
+.settings-hero p {
+  margin: 0;
+
+  color: #dbeafe;
+
+  line-height: 1.6;
+}
+
+
+.settings-hero-icon {
+  position: relative;
+
+  z-index: 2;
+
+  width: 78px;
+  height: 78px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  border-radius: 22px;
+
+  color: #ffffff;
+
+  background:
+    rgba(255,255,255,.10);
+
+  backdrop-filter:
+    blur(12px);
+
+  font-size: 32px;
+
+  box-shadow:
+    0 14px 30px
+    rgba(0,0,0,.12);
+}
+
+
+/* =========================
+   TITULO SECCION
+========================= */
+
+.settings-section {
+  margin-top: 5px;
+}
+
+
+.section-heading {
+  margin-bottom: 14px;
+}
+
+
+.section-heading span,
+.account-section > div > span {
+  color: #2f80ed;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .15em;
+}
+
+
+.section-heading h2,
+.account-section h2 {
+  margin:
+    4px
+    0
+    0;
+
+  color: #16324f;
+
+  font-size: 22px;
+}
+
+
+/* =========================
+   GRUPO
+========================= */
+
+.group {
+  overflow: hidden;
+
+  border:
+    1px solid
+    #c9d8e6;
+
+  border-radius: 21px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 10px 28px
+    rgba(22,50,79,.07);
+}
+
+
+.setting-row {
+  min-height: 94px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 22px;
+
+  padding:
+    17px
+    20px;
+
+  border-bottom:
+    1px solid
+    #e2e8f0;
+
+  transition:
+    background .2s ease;
+}
+
+
+.setting-row:last-child {
+  border-bottom: 0;
+}
+
+
+.setting-row:hover {
+  background:
+    linear-gradient(
+      90deg,
+      #f8fbff,
+      #f1f8fc
+    );
+}
+
+
+/* =========================
+   IZQUIERDA
+========================= */
+
+.setting-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  min-width: 0;
+}
+
+
+.setting-icon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  font-size: 19px;
+}
+
+
+.theme-icon {
+  background: #fef3c7;
+}
+
+
+.language-icon {
+  background: #dbeafe;
+}
+
+
+.privacy-icon {
+  background: #d1fae5;
+}
+
+
+.setting-copy {
+  display: grid;
+
+  gap: 3px;
+}
+
+
+.setting-copy strong {
+  color: #16324f;
+
+  font-size: 14px;
+}
+
+
+.setting-copy small {
+  color: #64748b;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================
+   SELECTS
+========================= */
+
+.setting-row select {
+  width: 230px;
+
+  min-height: 46px;
+
+  padding:
+    0
+    13px;
+
+  border:
+    1px solid
+    #c9d8e6;
+
+  border-radius: 12px;
+
+  color: #334155;
+
+  background:
+    #f8fbff;
+
+  outline: none;
+
+  font-weight: 700;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+
+.setting-row select:focus {
+  border-color:
+    #3b82f6;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(37,99,235,.08);
+}
+
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch-wrapper input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+
+.switch {
+  width: 56px;
+  height: 31px;
+
+  display: block;
+
+  position: relative;
+
+  flex-shrink: 0;
+
+  border-radius: 999px;
+
+  background:
+    #cbd5e1;
+
+  cursor: pointer;
+
+  transition:
+    background .25s ease,
+    box-shadow .25s ease;
+}
+
+
+.switch span {
+  width: 23px;
+  height: 23px;
+
+  position: absolute;
+
+  top: 4px;
+  left: 4px;
+
+  border-radius: 50%;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 3px 8px
+    rgba(15,23,42,.18);
+
+  transition:
+    transform .25s ease;
+}
+
+
+.switch-wrapper input:checked + .switch {
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #10b981
+    );
+
+  box-shadow:
+    0 5px 14px
+    rgba(37,99,235,.18);
+}
+
+
+.switch-wrapper input:checked + .switch span {
+  transform:
+    translateX(25px);
+}
+
+
+/* =========================
+   CUENTA
+========================= */
+
+.account-section {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 25px;
+
+  margin-top: 24px;
+
+  padding:
+    21px
+    22px;
+
+  border:
+    1px solid
+    #fecaca;
+
+  border-radius: 19px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fffafa,
+      #fef2f2
+    );
+
+  box-shadow:
+    0 8px 22px
+    rgba(185,28,28,.05);
+}
+
+
+.account-section h2 {
+  margin:
+    4px
+    0
+    4px;
+}
+
+
+.account-section p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   CERRAR SESION
+========================= */
+
+.logout {
+  min-height: 48px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding:
+    0
+    18px;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid
+    #fca5a5;
+
+  border-radius: 13px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #dc2626
+    );
+
+  font-weight: 900;
+
+  box-shadow:
+    0 9px 22px
+    rgba(239,68,68,.18);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+}
+
+
+.logout:hover {
+  transform:
+    translateY(-1px);
+
+  filter:
+    brightness(1.03);
+
+  box-shadow:
+    0 12px 28px
+    rgba(239,68,68,.24);
+}
+
+
+.logout span {
+  font-size: 17px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 650px
+) {
+
+  .settings-hero {
+    align-items: flex-start;
+
+    padding:
+      25px
+      21px;
+
+    border-radius: 22px;
+  }
+
+
+  .settings-hero-icon {
+    width: 62px;
+    height: 62px;
+
+    font-size: 26px;
+  }
+
+
+  .setting-row {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .setting-row select {
+    width: 100%;
+  }
+
+
+  .switch-wrapper {
+    align-self: flex-end;
+  }
+
+
+  .account-section {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .logout {
+    width: 100%;
+  }
+
+}
