@@ -23,8 +23,25 @@
 
       </div>
 
-
       <div class="header-actions">
+
+        <button
+          type="button"
+          class="refresh-button"
+          (click)="exportPDF()"
+          [disabled]="filteredReports.length === 0"
+        >
+          📄 Exportar PDF
+        </button>
+
+        <button
+          type="button"
+          class="refresh-button"
+          (click)="exportCSV()"
+          [disabled]="filteredReports.length === 0"
+        >
+          📊 Exportar CSV
+        </button>
 
         <button
           type="button"
@@ -33,7 +50,6 @@
         >
           ↻ Actualizar
         </button>
-
 
         <button
           type="button"
@@ -46,8 +62,6 @@
       </div>
 
     </header>
-
-
 
     <!-- ESTADÍSTICAS -->
 
@@ -65,7 +79,6 @@
 
       </article>
 
-
       <article class="stat-card urgent-card">
 
         <span>
@@ -77,7 +90,6 @@
         </strong>
 
       </article>
-
 
       <article class="stat-card">
 
@@ -91,7 +103,6 @@
 
       </article>
 
-
       <article class="stat-card">
 
         <span>
@@ -104,7 +115,6 @@
 
       </article>
 
-
       <article class="stat-card">
 
         <span>
@@ -116,7 +126,6 @@
         </strong>
 
       </article>
-
 
       <article class="stat-card resolved-card">
 
@@ -131,8 +140,6 @@
       </article>
 
     </section>
-
-
 
     <!-- FILTROS -->
 
@@ -155,7 +162,6 @@
 
         </div>
 
-
         <button
           type="button"
           class="clear-button"
@@ -165,7 +171,6 @@
         </button>
 
       </div>
-
 
       <div class="search-row">
 
@@ -185,7 +190,6 @@
         </div>
 
       </div>
-
 
       <div class="filter-grid">
 
@@ -218,6 +222,10 @@
               En proceso
             </option>
 
+            <option value="pendiente_confirmacion">
+              Pendiente de confirmación
+            </option>
+
             <option value="resuelto">
               Resuelto
             </option>
@@ -225,7 +233,6 @@
           </select>
 
         </div>
-
 
         <!-- PRIORIDAD -->
 
@@ -264,7 +271,6 @@
 
         </div>
 
-
         <!-- CATEGORIA -->
 
         <div class="filter-field">
@@ -297,7 +303,6 @@
           </select>
 
         </div>
-
 
         <!-- TRABAJADOR -->
 
@@ -339,7 +344,6 @@
 
         </div>
 
-
         <!-- ORDEN -->
 
         <div class="filter-field">
@@ -373,8 +377,6 @@
 
     </section>
 
-
-
     <!-- SIN TRABAJADORES -->
 
     <section
@@ -396,8 +398,6 @@
 
     </section>
 
-
-
     <!-- LOADING -->
 
     <div
@@ -408,8 +408,6 @@
       Cargando reportes...
 
     </div>
-
-
 
     <!-- SIN RESULTADOS -->
 
@@ -434,8 +432,6 @@
       </p>
 
     </section>
-
-
 
     <!-- REPORTES -->
 
@@ -480,13 +476,11 @@
 
             </span>
 
-
             <span class="category-badge">
 
               {{ report.category }}
 
             </span>
-
 
             <span
               class="status-badge"
@@ -505,8 +499,6 @@
 
           </div>
 
-
-
           <!-- TITULO -->
 
           <h3>
@@ -515,14 +507,11 @@
 
           </h3>
 
-
           <p class="description">
 
             {{ report.description }}
 
           </p>
-
-
 
           <!-- META -->
 
@@ -533,12 +522,10 @@
               {{ report.location }}
             </span>
 
-
             <span>
               👤
               {{ report.userEmail }}
             </span>
-
 
             <span>
               🕒
@@ -549,9 +536,13 @@
               }}
             </span>
 
+            <span *ngIf="report.supportCount > 0">
+              👍
+              {{ report.supportCount }}
+              apoyos
+            </span>
+
           </div>
-
-
 
           <!-- TRABAJADOR -->
 
@@ -587,8 +578,6 @@
 
         </div>
 
-
-
         <!-- PANEL DERECHO -->
 
         <div class="assignment-panel">
@@ -596,7 +585,6 @@
           <label>
             Asignar trabajador
           </label>
-
 
           <select
             [(ngModel)]="
@@ -625,7 +613,6 @@
 
           </select>
 
-
           <button
             type="button"
             class="assign-button"
@@ -647,7 +634,6 @@
             }}
 
           </button>
-
 
           <button
             type="button"

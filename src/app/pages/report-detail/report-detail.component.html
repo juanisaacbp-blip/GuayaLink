@@ -13,6 +13,8 @@
     </a>
 
 
+    <!-- REPORTE -->
+
     <section class="hero card">
 
       <div class="hero-icon">
@@ -53,6 +55,133 @@
         <p>
           {{ report.description }}
         </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- QR -->
+
+    <section class="card qr-section">
+
+      <div class="qr-header">
+
+        <div>
+
+          <p class="eyebrow">
+            CÓDIGO QR
+          </p>
+
+          <h2>
+            Compartir reporte
+          </h2>
+
+          <p>
+            Escanea el código para abrir
+            directamente este reporte.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="qr-toggle-button"
+          (click)="toggleQR()"
+        >
+          {{
+            qrVisible
+              ? 'Ocultar QR'
+              : 'Mostrar QR'
+          }}
+        </button>
+
+      </div>
+
+
+      <div
+        class="qr-content"
+        *ngIf="qrVisible"
+      >
+
+        <div
+          class="qr-loading"
+          *ngIf="qrLoading"
+        >
+          Generando código QR...
+        </div>
+
+
+        <div
+          class="qr-error"
+          *ngIf="qrErrorMessage"
+        >
+          {{ qrErrorMessage }}
+        </div>
+
+
+        <div
+          class="qr-result"
+          *ngIf="
+            !qrLoading &&
+            qrDataUrl
+          "
+        >
+
+          <div class="qr-image-container">
+
+            <img
+              [src]="qrDataUrl"
+              alt="Código QR del reporte"
+              class="qr-image"
+            />
+
+          </div>
+
+
+          <div class="qr-information">
+
+            <strong>
+              Reporte {{ report.id }}
+            </strong>
+
+
+            <p>
+              Este código QR contiene el
+              enlace directo al reporte.
+            </p>
+
+
+            <div class="qr-url">
+              {{ qrReportUrl }}
+            </div>
+
+
+            <div class="qr-actions">
+
+              <button
+                type="button"
+                class="qr-download-button"
+                (click)="downloadQR()"
+              >
+                ↓ Descargar QR
+              </button>
+
+
+              <button
+                type="button"
+                class="qr-copy-button"
+                (click)="copyReportLink()"
+              >
+                🔗 Copiar enlace
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -119,6 +248,8 @@
 
     </section>
 
+
+    <!-- INFORMACIÓN -->
 
     <section class="info-grid">
 

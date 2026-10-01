@@ -784,3 +784,145 @@
   }
 
 }
+/* =========================
+   QR DEL REPORTE
+========================= */
+
+.qr-section {
+  margin-top: 22px;
+  padding: 24px;
+}
+
+.qr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.qr-header h2 {
+  margin: 4px 0 6px;
+}
+
+.qr-header p {
+  margin: 0;
+}
+
+.qr-toggle-button {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #1769e0;
+  color: white;
+}
+
+.qr-content {
+  margin-top: 24px;
+}
+
+.qr-result {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.qr-image-container {
+  background: white;
+  border-radius: 18px;
+  padding: 14px;
+  border: 1px solid #e3eaf2;
+}
+
+.qr-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.qr-information {
+  min-width: 0;
+}
+
+.qr-information strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.qr-information p {
+  margin: 0 0 14px;
+}
+
+.qr-url {
+  width: 100%;
+  overflow-wrap: anywhere;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f5f8fc;
+  border: 1px solid #e1e8f0;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.qr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.qr-download-button,
+.qr-copy-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.qr-download-button {
+  background: #1769e0;
+  color: white;
+}
+
+.qr-copy-button {
+  background: #eaf2ff;
+  color: #1558ad;
+}
+
+.qr-loading {
+  padding: 20px;
+  text-align: center;
+}
+
+.qr-error {
+  padding: 14px;
+  border-radius: 10px;
+  background: #fff1f1;
+  color: #a42828;
+}
+
+@media (max-width: 700px) {
+
+  .qr-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .qr-result {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-image-container {
+    width: min(100%, 260px);
+    margin: 0 auto;
+  }
+
+  .qr-toggle-button,
+  .qr-download-button,
+  .qr-copy-button {
+    width: 100%;
+  }
+
+}

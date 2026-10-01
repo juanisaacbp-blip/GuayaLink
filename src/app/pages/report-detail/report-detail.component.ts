@@ -24,6 +24,8 @@ import {
   onAuthStateChanged
 } from 'firebase/auth';
 
+import * as QRCode from 'qrcode';
+
 import {
   auth,
   db
@@ -110,11 +112,29 @@ implements OnInit {
   report:
     ReportDetail | null = null;
 
-  loading = true;
+  loading =
+    true;
 
-  updating = false;
+  updating =
+    false;
 
-  currentUserId = '';
+  currentUserId =
+    '';
+
+  qrVisible =
+    false;
+
+  qrLoading =
+    false;
+
+  qrDataUrl =
+    '';
+
+  qrReportUrl =
+    '';
+
+  qrErrorMessage =
+    '';
 
 
   constructor(
@@ -123,7 +143,8 @@ implements OnInit {
   ) {}
 
 
-  ngOnInit(): void {
+  ngOnInit():
+  void {
 
     onAuthStateChanged(
       auth,
@@ -131,7 +152,6 @@ implements OnInit {
 
         this.currentUserId =
           user?.uid || '';
-
 
         await this.loadReport();
 
@@ -145,9 +165,11 @@ implements OnInit {
   Promise<void> {
 
     const id =
-      this.route.snapshot.paramMap.get(
-        'id'
-      );
+      this.route.snapshot
+        .paramMap
+        .get(
+          'id'
+        );
 
 
     if (!id) {
@@ -271,6 +293,9 @@ implements OnInit {
       };
 
 
+      this.prepareReportUrl();
+
+
     } catch (error) {
 
       console.error(
@@ -287,6 +312,233 @@ implements OnInit {
 
   }
 
+
+  /*
+    ============================
+    QR
+    ============================
+  */
+
+  private prepareReportUrl():
+  void {
+
+    if (
+      !this.report
+    ) {
+
+      return;
+
+    }
+
+
+    /*
+      En la versión web se utiliza
+      automáticamente el dominio
+      donde está abierto GuayaLink.
+
+      Ejemplo:
+      https://tudominio.com/reporte/ID
+
+      En localhost será:
+      http://localhost:4200/reporte/ID
+    */
+
+    const origin =
+      window.location.origin;
+
+
+    this.qrReportUrl =
+      `${origin}/reporte/${this.report.id}`;
+
+  }
+
+
+  async toggleQR():
+  Promise<void> {
+
+    if (
+      this.qrVisible
+    ) {
+
+      this.qrVisible =
+        false;
+
+      return;
+
+    }
+
+
+    this.qrVisible =
+      true;
+
+
+    if (
+      !this.qrDataUrl
+    ) {
+
+      await this.generateQR();
+
+    }
+
+  }
+
+
+  private async generateQR():
+  Promise<void> {
+
+    if (
+      !this.report
+    ) {
+
+      return;
+
+    }
+
+
+    this.qrLoading =
+      true;
+
+    this.qrErrorMessage =
+      '';
+
+
+    try {
+
+      if (
+        !this.qrReportUrl
+      ) {
+
+        this.prepareReportUrl();
+
+      }
+
+
+      this.qrDataUrl =
+        await QRCode.toDataURL(
+          this.qrReportUrl,
+          {
+            width:
+              500,
+
+            margin:
+              2,
+
+            errorCorrectionLevel:
+              'H'
+          }
+        );
+
+
+    } catch (error) {
+
+      console.error(
+        'Error generando QR:',
+        error
+      );
+
+
+      this.qrErrorMessage =
+        'No se pudo generar el código QR.';
+
+
+    } finally {
+
+      this.qrLoading =
+        false;
+
+    }
+
+  }
+
+
+  downloadQR():
+  void {
+
+    if (
+      !this.qrDataUrl ||
+      !this.report
+    ) {
+
+      return;
+
+    }
+
+
+    const link =
+      document.createElement(
+        'a'
+      );
+
+
+    link.href =
+      this.qrDataUrl;
+
+
+    link.download =
+      `GuayaLink-Reporte-${this.report.id}.png`;
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    link.click();
+
+
+    document.body.removeChild(
+      link
+    );
+
+  }
+
+
+  async copyReportLink():
+  Promise<void> {
+
+    if (
+      !this.qrReportUrl
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        this.qrReportUrl
+      );
+
+
+      alert(
+        'Enlace del reporte copiado.'
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        'No se pudo copiar:',
+        error
+      );
+
+
+      alert(
+        'No se pudo copiar el enlace.'
+      );
+
+    }
+
+  }
+
+
+  /*
+    ============================
+    APOYAR REPORTE
+    ============================
+  */
 
   async supportReport():
   Promise<void> {
@@ -322,11 +574,13 @@ implements OnInit {
 
       this.report.supportCount++;
 
+
     } catch (error) {
 
       console.error(
         error
       );
+
 
     } finally {
 
@@ -337,6 +591,12 @@ implements OnInit {
 
   }
 
+
+  /*
+    ============================
+    CONFIRMAR SOLUCIÓN
+    ============================
+  */
 
   async confirmResolution():
   Promise<void> {
@@ -377,6 +637,7 @@ implements OnInit {
           this.report.id
         ),
         {
+
           status:
             'resuelto',
 
@@ -391,6 +652,7 @@ implements OnInit {
 
           updatedAt:
             serverTimestamp()
+
         }
       );
 
@@ -419,6 +681,7 @@ implements OnInit {
         'No pudimos confirmar la solución.'
       );
 
+
     } finally {
 
       this.updating =
@@ -428,6 +691,12 @@ implements OnInit {
 
   }
 
+
+  /*
+    ============================
+    RECHAZAR SOLUCIÓN
+    ============================
+  */
 
   async rejectResolution():
   Promise<void> {
@@ -468,6 +737,7 @@ implements OnInit {
           this.report.id
         ),
         {
+
           status:
             'en_proceso',
 
@@ -479,6 +749,7 @@ implements OnInit {
 
           updatedAt:
             serverTimestamp()
+
         }
       );
 
@@ -504,6 +775,7 @@ implements OnInit {
         'No pudimos actualizar el reporte.'
       );
 
+
     } finally {
 
       this.updating =
@@ -514,15 +786,28 @@ implements OnInit {
   }
 
 
+  /*
+    ============================
+    PROPIETARIO
+    ============================
+  */
+
   isOwner():
   boolean {
 
     return !!this.report
-      && this.currentUserId ===
-         this.report.userId;
+      &&
+      this.currentUserId ===
+      this.report.userId;
 
   }
 
+
+  /*
+    ============================
+    GOOGLE MAPS
+    ============================
+  */
 
   openMaps():
   void {
@@ -547,11 +832,21 @@ implements OnInit {
   }
 
 
+  /*
+    ============================
+    ESTADO
+    ============================
+  */
+
   getStatusLabel():
   string {
 
-    if (!this.report) {
+    if (
+      !this.report
+    ) {
+
       return '';
+
     }
 
 
@@ -560,21 +855,32 @@ implements OnInit {
     ) {
 
       case 'pendiente':
+
         return 'Pendiente';
 
+
       case 'asignado':
+
         return 'Asignado';
 
+
       case 'en_proceso':
+
         return 'En proceso';
 
+
       case 'pendiente_confirmacion':
+
         return 'Esperando confirmación';
 
+
       case 'resuelto':
+
         return 'Resuelto';
 
+
       default:
+
         return this.report.status;
 
     }
@@ -582,11 +888,21 @@ implements OnInit {
   }
 
 
+  /*
+    ============================
+    PRIORIDAD
+    ============================
+  */
+
   getPriorityLabel():
   string {
 
-    if (!this.report) {
+    if (
+      !this.report
+    ) {
+
       return '';
+
     }
 
 
@@ -595,15 +911,22 @@ implements OnInit {
     ) {
 
       case 'urgente':
+
         return 'Urgente';
 
+
       case 'alta':
+
         return 'Alta';
 
+
       case 'media':
+
         return 'Media';
 
+
       default:
+
         return 'Baja';
 
     }
@@ -611,11 +934,20 @@ implements OnInit {
   }
 
 
+  /*
+    ============================
+    FECHA
+    ============================
+  */
+
   formatDate(
     value: any
-  ): string {
+  ):
+  string {
 
-    if (!value) {
+    if (
+      !value
+    ) {
 
       return 'Pendiente';
 
@@ -634,11 +966,13 @@ implements OnInit {
     return new Intl.DateTimeFormat(
       'es-EC',
       {
+
         dateStyle:
           'medium',
 
         timeStyle:
           'short'
+
       }
     ).format(
       date

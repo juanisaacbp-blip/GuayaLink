@@ -1,19 +1,7 @@
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-
-import {
-  FormsModule
-} from '@angular/forms';
-
-import {
-  Router
-} from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import {
   addDoc,
@@ -26,77 +14,61 @@ import {
   where
 } from 'firebase/firestore';
 
-import {
-  signOut
-} from 'firebase/auth';
+import { signOut } from 'firebase/auth';
+
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 import {
   auth,
   db
 } from '../../../main';
 
-
 interface Worker {
-
   uid: string;
-
   email: string;
-
   name: string;
-
 }
 
-
 interface AdminReport {
-
   id: string;
 
   title: string;
-
   category: string;
-
   description: string;
 
   status: string;
 
   priority: string;
-
   priorityScore: number;
 
   progress: number;
 
   userId: string;
-
   userEmail: string;
 
   location: string;
 
   assignedWorkerId: string;
-
   assignedWorkerEmail: string;
-
   assignedWorkerName: string;
 
   selectedWorkerId: string;
 
+  supportCount: number;
+
   createdAt: any;
-
 }
-
 
 @Component({
   selector: 'app-admin-dashboard',
-
   standalone: true,
-
   imports: [
     CommonModule,
     FormsModule
   ],
-
   templateUrl:
     './admin-dashboard.component.html',
-
   styleUrl:
     './admin-dashboard.component.css'
 })
@@ -112,11 +84,9 @@ implements OnInit {
   workers:
     Worker[] = [];
 
-
   loading = true;
 
   assigningId = '';
-
 
   searchText = '';
 
@@ -135,7 +105,6 @@ implements OnInit {
   sortOrder =
     'priority';
 
-
   categories = [
     'todas',
     'Calles',
@@ -146,7 +115,6 @@ implements OnInit {
     'Otro'
   ];
 
-
   statuses = [
     'todos',
     'pendiente',
@@ -154,7 +122,6 @@ implements OnInit {
     'en_proceso',
     'resuelto'
   ];
-
 
   priorities = [
     'todas',
@@ -164,25 +131,20 @@ implements OnInit {
     'baja'
   ];
 
-
   constructor(
     private router: Router
   ) {}
-
 
   async ngOnInit():
   Promise<void> {
 
     await this.refresh();
-
   }
-
 
   async refresh():
   Promise<void> {
 
     this.loading = true;
-
 
     try {
 
@@ -190,7 +152,6 @@ implements OnInit {
         this.loadWorkers(),
         this.loadReports()
       ]);
-
 
       this.applyFilters();
 
@@ -203,13 +164,9 @@ implements OnInit {
 
     } finally {
 
-      this.loading =
-        false;
-
+      this.loading = false;
     }
-
   }
-
 
   private async loadWorkers():
   Promise<void> {
@@ -229,7 +186,6 @@ implements OnInit {
         )
       );
 
-
     this.workers =
       snapshot.docs.map(
         worker => {
@@ -237,9 +193,7 @@ implements OnInit {
           const data =
             worker.data();
 
-
           return {
-
             uid:
               worker.id,
 
@@ -248,14 +202,10 @@ implements OnInit {
 
             name:
               data['name'] || ''
-
           };
-
         }
       );
-
   }
-
 
   private async loadReports():
   Promise<void> {
@@ -268,7 +218,6 @@ implements OnInit {
         )
       );
 
-
     this.reports =
       snapshot.docs.map(
         report => {
@@ -276,9 +225,7 @@ implements OnInit {
           const data =
             report.data();
 
-
           return {
-
             id:
               report.id,
 
@@ -342,17 +289,19 @@ implements OnInit {
               data['assignedWorkerId']
               || '',
 
+            supportCount:
+              Number(
+                data['supportCount']
+                || 0
+              ),
+
             createdAt:
               data['createdAt']
               || null
-
           };
-
         }
       );
-
   }
-
 
   applyFilters():
   void {
@@ -360,12 +309,10 @@ implements OnInit {
     let result =
       [...this.reports];
 
-
     const search =
       this.searchText
         .trim()
         .toLowerCase();
-
 
     if (search) {
 
@@ -381,19 +328,16 @@ implements OnInit {
                 ${report.userEmail}
                 ${report.location}
                 ${report.assignedWorkerEmail}
+                ${report.assignedWorkerName}
               `
                 .toLowerCase();
-
 
             return text.includes(
               search
             );
-
           }
         );
-
     }
-
 
     if (
       this.statusFilter !==
@@ -406,9 +350,7 @@ implements OnInit {
             report.status ===
             this.statusFilter
         );
-
     }
-
 
     if (
       this.priorityFilter !==
@@ -421,9 +363,7 @@ implements OnInit {
             report.priority ===
             this.priorityFilter
         );
-
     }
-
 
     if (
       this.categoryFilter !==
@@ -436,9 +376,7 @@ implements OnInit {
             report.category ===
             this.categoryFilter
         );
-
     }
-
 
     if (
       this.workerFilter ===
@@ -462,9 +400,7 @@ implements OnInit {
             report.assignedWorkerId ===
             this.workerFilter
         );
-
     }
-
 
     result.sort(
       (a, b) => {
@@ -482,16 +418,13 @@ implements OnInit {
               a.priority
             );
 
-
           if (
             priorityDifference !==
             0
           ) {
 
             return priorityDifference;
-
           }
-
 
           return (
             this.getTimestamp(
@@ -501,9 +434,7 @@ implements OnInit {
               a.createdAt
             )
           );
-
         }
-
 
         if (
           this.sortOrder ===
@@ -518,9 +449,7 @@ implements OnInit {
               a.createdAt
             )
           );
-
         }
-
 
         if (
           this.sortOrder ===
@@ -535,21 +464,15 @@ implements OnInit {
               b.createdAt
             )
           );
-
         }
 
-
         return 0;
-
       }
     );
 
-
     this.filteredReports =
       result;
-
   }
-
 
   clearFilters():
   void {
@@ -571,17 +494,573 @@ implements OnInit {
     this.sortOrder =
       'priority';
 
-
     this.applyFilters();
-
   }
 
+  exportCSV():
+  void {
+
+    if (
+      this.filteredReports.length ===
+      0
+    ) {
+
+      alert(
+        'No hay reportes para exportar.'
+      );
+
+      return;
+    }
+
+    const headers = [
+      'ID',
+      'Título',
+      'Descripción',
+      'Categoría',
+      'Prioridad',
+      'Puntaje de prioridad',
+      'Estado',
+      'Progreso',
+      'Ubicación',
+      'Ciudadano',
+      'Trabajador',
+      'Apoyos',
+      'Fecha'
+    ];
+
+    const rows =
+      this.filteredReports.map(
+        report => [
+
+          report.id,
+
+          report.title,
+
+          report.description,
+
+          report.category,
+
+          this.getPriorityLabel(
+            report.priority
+          ),
+
+          report.priorityScore,
+
+          this.getStatus(
+            report.status
+          ),
+
+          `${report.progress}%`,
+
+          report.location,
+
+          report.userEmail ||
+          'Sin correo',
+
+          this.getWorkerName(
+            report
+          ),
+
+          report.supportCount,
+
+          this.formatDate(
+            report.createdAt
+          )
+        ]
+      );
+
+    const csvRows = [
+      headers,
+      ...rows
+    ];
+
+    const csvContent =
+      csvRows
+        .map(
+          row =>
+            row
+              .map(
+                value =>
+                  this.escapeCSV(
+                    String(
+                      value ?? ''
+                    )
+                  )
+              )
+              .join(',')
+        )
+        .join('\r\n');
+
+    const blob =
+      new Blob(
+        [
+          '\uFEFF',
+          csvContent
+        ],
+        {
+          type:
+            'text/csv;charset=utf-8;'
+        }
+      );
+
+    this.downloadBlob(
+      blob,
+      this.getExportFileName(
+        'csv'
+      )
+    );
+  }
+
+  exportPDF():
+  void {
+
+    if (
+      this.filteredReports.length ===
+      0
+    ) {
+
+      alert(
+        'No hay reportes para exportar.'
+      );
+
+      return;
+    }
+
+    const pdf =
+      new jsPDF({
+        orientation:
+          'landscape',
+
+        unit:
+          'mm',
+
+        format:
+          'a4'
+      });
+
+    pdf.setFont(
+      'helvetica',
+      'bold'
+    );
+
+    pdf.setFontSize(
+      20
+    );
+
+    pdf.text(
+      'GuayaLink - Reportes',
+      14,
+      17
+    );
+
+    pdf.setFont(
+      'helvetica',
+      'normal'
+    );
+
+    pdf.setFontSize(
+      10
+    );
+
+    pdf.text(
+      `Generado: ${this.getCurrentDateLabel()}`,
+      14,
+      24
+    );
+
+    pdf.text(
+      `Reportes exportados: ${this.filteredReports.length}`,
+      14,
+      30
+    );
+
+    pdf.text(
+      this.getActiveFiltersText(),
+      14,
+      36
+    );
+
+    const body =
+      this.filteredReports.map(
+        report => [
+
+          report.title,
+
+          report.category,
+
+          this.getPriorityLabel(
+            report.priority
+          ),
+
+          this.getStatus(
+            report.status
+          ),
+
+          report.location,
+
+          report.userEmail ||
+          'Sin correo',
+
+          this.getWorkerName(
+            report
+          ),
+
+          String(
+            report.supportCount
+          ),
+
+          this.formatDate(
+            report.createdAt
+          )
+        ]
+      );
+
+    autoTable(
+      pdf,
+      {
+        startY:
+          43,
+
+        head: [[
+          'Título',
+          'Categoría',
+          'Prioridad',
+          'Estado',
+          'Ubicación',
+          'Ciudadano',
+          'Trabajador',
+          'Apoyos',
+          'Fecha'
+        ]],
+
+        body,
+
+        styles: {
+          fontSize:
+            7,
+
+          cellPadding:
+            2,
+
+          overflow:
+            'linebreak'
+        },
+
+        headStyles: {
+          fillColor:
+            [31, 78, 121],
+
+          textColor:
+            [255, 255, 255]
+        },
+
+        alternateRowStyles: {
+          fillColor:
+            [248, 251, 255]
+        },
+
+        columnStyles: {
+          0: {
+            cellWidth:
+              31
+          },
+
+          1: {
+            cellWidth:
+              20
+          },
+
+          2: {
+            cellWidth:
+              18
+          },
+
+          3: {
+            cellWidth:
+              20
+          },
+
+          4: {
+            cellWidth:
+              42
+          },
+
+          5: {
+            cellWidth:
+              36
+          },
+
+          6: {
+            cellWidth:
+              32
+          },
+
+          7: {
+            cellWidth:
+              15
+          },
+
+          8: {
+            cellWidth:
+              29
+          }
+        },
+
+        margin: {
+          left:
+            10,
+
+          right:
+            10
+        }
+      }
+    );
+
+    pdf.save(
+      this.getExportFileName(
+        'pdf'
+      )
+    );
+  }
+
+  private escapeCSV(
+    value: string
+  ): string {
+
+    const safeValue =
+      value.replace(
+        /"/g,
+        '""'
+      );
+
+    return `"${safeValue}"`;
+  }
+
+  private downloadBlob(
+    blob: Blob,
+    fileName: string
+  ): void {
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+    const anchor =
+      document.createElement(
+        'a'
+      );
+
+    anchor.href =
+      url;
+
+    anchor.download =
+      fileName;
+
+    document.body.appendChild(
+      anchor
+    );
+
+    anchor.click();
+
+    document.body.removeChild(
+      anchor
+    );
+
+    URL.revokeObjectURL(
+      url
+    );
+  }
+
+  private getWorkerName(
+    report: AdminReport
+  ): string {
+
+    if (
+      !report.assignedWorkerId
+    ) {
+
+      return 'Sin asignar';
+    }
+
+    return (
+      report.assignedWorkerName ||
+      report.assignedWorkerEmail ||
+      'Trabajador asignado'
+    );
+  }
+
+  private getExportFileName(
+    extension:
+      'pdf' |
+      'csv'
+  ): string {
+
+    const now =
+      new Date();
+
+    const year =
+      now.getFullYear();
+
+    const month =
+      String(
+        now.getMonth() + 1
+      ).padStart(
+        2,
+        '0'
+      );
+
+    const day =
+      String(
+        now.getDate()
+      ).padStart(
+        2,
+        '0'
+      );
+
+    const hours =
+      String(
+        now.getHours()
+      ).padStart(
+        2,
+        '0'
+      );
+
+    const minutes =
+      String(
+        now.getMinutes()
+      ).padStart(
+        2,
+        '0'
+      );
+
+    return (
+      `GuayaLink-Reportes-` +
+      `${year}-${month}-${day}-` +
+      `${hours}-${minutes}.` +
+      extension
+    );
+  }
+
+  private getCurrentDateLabel():
+  string {
+
+    return new Intl.DateTimeFormat(
+      'es-EC',
+      {
+        dateStyle:
+          'medium',
+
+        timeStyle:
+          'short'
+      }
+    ).format(
+      new Date()
+    );
+  }
+
+  private getActiveFiltersText():
+  string {
+
+    const filters:
+      string[] = [];
+
+    if (
+      this.statusFilter !==
+      'todos'
+    ) {
+
+      filters.push(
+        `Estado: ${this.getStatus(
+          this.statusFilter
+        )}`
+      );
+    }
+
+    if (
+      this.priorityFilter !==
+      'todas'
+    ) {
+
+      filters.push(
+        `Prioridad: ${this.getPriorityLabel(
+          this.priorityFilter
+        )}`
+      );
+    }
+
+    if (
+      this.categoryFilter !==
+      'todas'
+    ) {
+
+      filters.push(
+        `Categoría: ${this.categoryFilter}`
+      );
+    }
+
+    if (
+      this.workerFilter ===
+      'sin_asignar'
+    ) {
+
+      filters.push(
+        'Trabajador: Sin asignar'
+      );
+
+    } else if (
+      this.workerFilter !==
+      'todos'
+    ) {
+
+      const worker =
+        this.workers.find(
+          item =>
+            item.uid ===
+            this.workerFilter
+        );
+
+      filters.push(
+        `Trabajador: ${
+          worker?.name ||
+          worker?.email ||
+          'Seleccionado'
+        }`
+      );
+    }
+
+    if (
+      this.searchText.trim()
+    ) {
+
+      filters.push(
+        `Búsqueda: ${this.searchText.trim()}`
+      );
+    }
+
+    if (
+      filters.length ===
+      0
+    ) {
+
+      return 'Filtros: Todos los reportes';
+    }
+
+    return (
+      'Filtros: ' +
+      filters.join(
+        ' | '
+      )
+    );
+  }
 
   private priorityWeight(
     priority: string
   ): number {
 
-    switch (priority) {
+    switch (
+      priority
+    ) {
 
       case 'urgente':
         return 4;
@@ -597,11 +1076,8 @@ implements OnInit {
 
       default:
         return 0;
-
     }
-
   }
-
 
   private getTimestamp(
     value: any
@@ -612,9 +1088,7 @@ implements OnInit {
     ) {
 
       return 0;
-
     }
-
 
     if (
       typeof value?.toMillis ===
@@ -622,20 +1096,15 @@ implements OnInit {
     ) {
 
       return value.toMillis();
-
     }
-
 
     const date =
       new Date(
         value
       );
 
-
     return date.getTime();
-
   }
-
 
   async assignWorker(
     report: AdminReport
@@ -650,9 +1119,7 @@ implements OnInit {
       );
 
       return;
-
     }
-
 
     const worker =
       this.workers.find(
@@ -661,21 +1128,19 @@ implements OnInit {
           report.selectedWorkerId
       );
 
-
-    if (!worker) {
+    if (
+      !worker
+    ) {
 
       alert(
         'Trabajador no encontrado.'
       );
 
       return;
-
     }
-
 
     this.assigningId =
       report.id;
-
 
     try {
 
@@ -686,7 +1151,6 @@ implements OnInit {
           report.id
         ),
         {
-
           assignedWorkerId:
             worker.uid,
 
@@ -707,10 +1171,8 @@ implements OnInit {
 
           updatedAt:
             serverTimestamp()
-
         }
       );
-
 
       if (
         report.userId
@@ -722,7 +1184,6 @@ implements OnInit {
             'notifications'
           ),
           {
-
             userId:
               report.userId,
 
@@ -743,12 +1204,9 @@ implements OnInit {
 
             createdAt:
               serverTimestamp()
-
           }
         );
-
       }
-
 
       await this.refresh();
 
@@ -759,7 +1217,6 @@ implements OnInit {
         error
       );
 
-
       alert(
         'No se pudo asignar el trabajador.'
       );
@@ -768,11 +1225,8 @@ implements OnInit {
 
       this.assigningId =
         '';
-
     }
-
   }
-
 
   openReport(
     id: string
@@ -784,15 +1238,15 @@ implements OnInit {
         id
       ]
     );
-
   }
-
 
   getStatus(
     status: string
   ): string {
 
-    switch (status) {
+    switch (
+      status
+    ) {
 
       case 'pendiente':
         return 'Pendiente';
@@ -803,22 +1257,24 @@ implements OnInit {
       case 'en_proceso':
         return 'En proceso';
 
+      case 'pendiente_confirmacion':
+        return 'Pendiente de confirmación';
+
       case 'resuelto':
         return 'Resuelto';
 
       default:
         return status;
-
     }
-
   }
-
 
   getPriorityLabel(
     priority: string
   ): string {
 
-    switch (priority) {
+    switch (
+      priority
+    ) {
 
       case 'urgente':
         return 'Urgente';
@@ -831,11 +1287,8 @@ implements OnInit {
 
       default:
         return 'Baja';
-
     }
-
   }
-
 
   countStatus(
     status: string
@@ -846,9 +1299,7 @@ implements OnInit {
         report.status ===
         status
     ).length;
-
   }
-
 
   countPriority(
     priority: string
@@ -859,9 +1310,7 @@ implements OnInit {
         report.priority ===
         priority
     ).length;
-
   }
-
 
   getUnassignedCount():
   number {
@@ -870,27 +1319,26 @@ implements OnInit {
       report =>
         !report.assignedWorkerId
     ).length;
-
   }
-
 
   formatDate(
     value: any
   ): string {
 
-    if (!value) {
+    if (
+      !value
+    ) {
 
       return 'Sin fecha';
-
     }
-
 
     const date =
       typeof value?.toDate ===
       'function'
         ? value.toDate()
-        : new Date(value);
-
+        : new Date(
+            value
+          );
 
     return new Intl.DateTimeFormat(
       'es-EC',
@@ -904,9 +1352,7 @@ implements OnInit {
     ).format(
       date
     );
-
   }
-
 
   async logout():
   Promise<void> {
@@ -915,11 +1361,8 @@ implements OnInit {
       auth
     );
 
-
     await this.router.navigateByUrl(
       '/login'
     );
-
   }
-
 }

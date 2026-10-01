@@ -1,6 +1,4 @@
-import {
-  Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import {
   getApp
@@ -68,28 +66,30 @@ export interface GuayaLinkAIAnalysis {
 export class GuayaLinkAIService {
 
   /*
-    Primero usamos Flash-Lite.
+    Modelos disponibles para intentar
+    el análisis.
 
-    Es ideal para GuayaLink porque:
-    - es rápido
-    - tiene nivel gratuito
-    - sirve perfectamente para
-      clasificación y resúmenes
+    Si uno falla, GuayaLink intenta
+    automáticamente el siguiente.
   */
 
-  private readonly modelNames =
-    [
-      'gemini-3.5-flash-lite',
-      'gemini-3.8-flash',
-      'gemini-3.7-flash',
-      'gemini-3.6-flash',
-      'gemini-3.5-flash'
-    ];
+  private readonly modelNames = [
+    'gemini-3.5-flash-lite',
+    'gemini-3.8-flash',
+    'gemini-3.7-flash',
+    'gemini-3.6-flash',
+    'gemini-3.5-flash'
+  ];
 
 
   private currentModelName =
     '';
 
+
+  /*
+    Respuesta estructurada que debe
+    devolver Gemini.
+  */
 
   private readonly schema =
     Schema.object({
@@ -150,22 +150,25 @@ export class GuayaLinkAIService {
   /*
     Gemini Developer API.
 
-    Esto mantiene tu proyecto
-    compatible con Spark / gratis.
+    Se mantiene integrado mediante
+    Firebase AI Logic.
   */
 
   private readonly ai =
     getAI(
       getApp(),
       {
-
         backend:
           new GoogleAIBackend()
-
       }
     );
 
 
+  /*
+    ================================
+    ANALIZAR REPORTE
+    ================================
+  */
 
   async analyzeReport(
     title: string,
@@ -175,14 +178,25 @@ export class GuayaLinkAIService {
   ):
   Promise<GuayaLinkAIAnalysis> {
 
+    const hasImage =
+      !!imageFile;
+
+
     const prompt =
       `
-Eres GuayaLink AI.
+Eres GuayaLink AI, el sistema de análisis inteligente
+de reportes ciudadanos de GuayaLink.
 
-Analizas reportes ciudadanos sobre
-problemas urbanos de Guayaquil, Ecuador.
+GuayaLink permite a ciudadanos de Guayaquil, Ecuador,
+reportar problemas urbanos para que posteriormente
+puedan ser revisados por administradores y trabajadores.
 
-REPORTE
+Tu trabajo es analizar SOLO la evidencia entregada
+por el ciudadano.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REPORTE DEL CIUDADANO
 
 Título:
 ${title}
@@ -190,50 +204,217 @@ ${title}
 Descripción:
 ${description}
 
+Fotografía adjunta:
+${hasImage ? 'Sí' : 'No'}
 
-Debes producir:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. Categoría:
-Calles, Alumbrado, Limpieza,
-Transporte, Seguridad u Otro.
+DEBES ANALIZAR:
 
-2. Prioridad:
-baja, media, alta o urgente.
+1. CATEGORÍA
 
-3. Nivel de riesgo:
-número entero del 1 al 10.
+Selecciona exactamente una:
 
-4. Confianza:
-número entre 0 y 100.
-
-5. Resumen administrativo:
-máximo 2 oraciones.
-
-6. Explicación:
-máximo 3 oraciones.
-
-7. Acción recomendada:
-una acción administrativa razonable.
-
-8. Entre 1 y 4 factores de riesgo.
-
-9. Indica si requiere atención rápida.
+- Calles
+- Alumbrado
+- Limpieza
+- Transporte
+- Seguridad
+- Otro
 
 
-REGLAS:
+2. PRIORIDAD
+
+Selecciona exactamente una:
+
+- baja
+- media
+- alta
+- urgente
+
+
+Utiliza estas reglas:
+
+BAJA
+
+Usa "baja" cuando el problema tenga poco impacto
+inmediato y no exista evidencia clara de peligro.
+
+Ejemplos generales:
+
+- problema principalmente estético
+- suciedad menor
+- desperfecto pequeño
+- problema que puede esperar una atención normal
+
+
+MEDIA
+
+Usa "media" cuando el problema afecte claramente
+a ciudadanos o servicios, pero no exista evidencia
+de peligro importante o inmediato.
+
+Ejemplos generales:
+
+- deterioro moderado de una vía
+- alumbrado que no funciona
+- acumulación considerable de basura
+- problema de transporte que causa molestias
+- situación que requiere atención pero puede esperar
+
+
+ALTA
+
+Usa "alta" cuando exista un riesgo considerable,
+una afectación importante o posibilidad razonable
+de que el problema cause daños si continúa.
+
+Ejemplos generales:
+
+- obstáculo importante en una vía
+- hueco peligroso
+- infraestructura severamente dañada
+- zona insegura
+- problema que afecta seriamente circulación,
+  acceso o seguridad
+
+
+URGENTE
+
+Usa "urgente" SOLAMENTE cuando exista evidencia
+clara de peligro inmediato o una situación que
+requiera intervención rápida.
+
+Ejemplos generales:
+
+- riesgo inmediato para personas
+- infraestructura que aparenta estar a punto de fallar
+- vía completamente bloqueada en una situación peligrosa
+- condición claramente peligrosa observada
+- situación que razonablemente requiere atención inmediata
+
+IMPORTANTE:
+
+No marques un reporte como urgente solamente porque
+el ciudadano utilice palabras como:
+
+"urgente"
+"grave"
+"peligroso"
+"emergencia"
+
+Debes evaluar el contexto y la evidencia disponible.
+
+
+3. NIVEL DE RIESGO
+
+Devuelve un número entero del 1 al 10.
+
+Guía:
+
+1-2 = riesgo muy bajo
+3-4 = riesgo bajo/moderado
+5-6 = riesgo considerable
+7-8 = riesgo alto
+9-10 = riesgo crítico o inmediato
+
+
+4. CONFIANZA
+
+Número entero entre 0 y 100.
+
+La confianza representa qué tan segura es la
+clasificación basada en la información disponible.
+
+Si la descripción es ambigua o la fotografía
+no permite confirmar claramente el problema,
+reduce la confianza.
+
+
+5. RESUMEN ADMINISTRATIVO
+
+Máximo 2 oraciones.
+
+Resume lo que realmente fue reportado.
+
+No inventes información.
+
+
+6. EXPLICACIÓN
+
+Máximo 3 oraciones.
+
+Explica de forma breve por qué seleccionaste:
+
+- categoría
+- prioridad
+- nivel de riesgo
+
+
+7. ACCIÓN RECOMENDADA
+
+Sugiere una acción administrativa razonable.
+
+Ejemplos:
+
+- realizar inspección
+- asignar equipo correspondiente
+- verificar condición reportada
+- programar reparación
+- revisar el área
+
+No inventes autoridades específicas si no
+son necesarias.
+
+
+8. FACTORES DE RIESGO
+
+Devuelve entre 1 y 4 factores.
+
+Deben estar relacionados únicamente con la
+información proporcionada.
+
+
+9. ATENCIÓN RÁPIDA
+
+requiereAtencionRapida debe ser true solamente
+si la prioridad es:
+
+- alta
+- urgente
+
+En cualquier otro caso debe ser false.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REGLAS IMPORTANTES
 
 - No inventes información.
 - No inventes accidentes.
 - No inventes personas lesionadas.
+- No inventes víctimas.
 - No inventes dimensiones.
+- No inventes daños no visibles.
+- No inventes información que no esté en el texto
+  o fotografía.
 - No exageres el riesgo.
-- Si existe una fotografía,
-  úsala como evidencia adicional.
-- Si algo no se observa claramente,
-  no lo afirmes.
-- Responde en español.
-- Sé breve.
+- No reduzcas un riesgo evidente.
+- No clasifiques algo como urgente únicamente
+  por palabras alarmantes.
+- Analiza el significado completo del reporte.
+- Si existe fotografía, úsala como evidencia adicional.
+- El texto y la fotografía deben analizarse juntos.
+- Si texto e imagen parecen contradecirse,
+  disminuye la confianza.
+- Si algo no se observa claramente, no lo afirmes.
+- Una fotografía no demuestra automáticamente
+  que exista peligro.
 - La evaluación es orientativa.
+- Responde en español.
+- Sé breve y profesional.
+
+Devuelve únicamente la estructura solicitada.
       `.trim();
 
 
@@ -243,8 +424,10 @@ REGLAS:
 
 
     /*
-      Cada modelo tendrá hasta
-      2 intentos.
+      Intentamos varios modelos.
+
+      Cada uno tiene dos intentos
+      antes de pasar al siguiente.
     */
 
     for (
@@ -261,7 +444,7 @@ REGLAS:
         try {
 
           console.log(
-            `🤖 Intentando ${modelName} - intento ${attempt}/2`
+            `🤖 GuayaLink AI: ${modelName} - intento ${attempt}/2`
           );
 
 
@@ -281,13 +464,6 @@ REGLAS:
                   responseSchema:
                     this.schema,
 
-                  /*
-                    Nuestro reporte es corto.
-
-                    No necesitamos una salida
-                    gigantesca.
-                  */
-
                   maxOutputTokens:
                     1200
 
@@ -299,6 +475,15 @@ REGLAS:
 
           let result;
 
+
+          /*
+            Si existe imagen enviamos:
+
+            - prompt
+            - fotografía
+
+            Si no existe, solamente texto.
+          */
 
           if (
             imageFile
@@ -337,13 +522,13 @@ REGLAS:
 
 
           console.log(
-            `📥 ${modelName}:`,
+            `📥 Respuesta de ${modelName}:`,
             text
           );
 
 
           console.log(
-            `Finish reason:`,
+            'Finish reason:',
             response
               .candidates?.[0]
               ?.finishReason
@@ -370,9 +555,30 @@ REGLAS:
 
 
           /*
-            Si llegamos aquí,
-            LA IA REAL FUNCIONÓ.
+            Validamos la respuesta para
+            evitar valores inesperados.
           */
+
+          const validated =
+            this.validateAnalysis(
+              parsed
+            );
+
+
+          /*
+            Aplicamos una segunda capa
+            de coherencia.
+
+            Esto evita contradicciones
+            como prioridad baja con
+            riesgo 10.
+          */
+
+          const coherent =
+            this.enforceConsistency(
+              validated
+            );
+
 
           this.currentModelName =
             modelName;
@@ -383,10 +589,13 @@ REGLAS:
           );
 
 
-          return this.validateAnalysis(
-            parsed
+          console.log(
+            '📊 Análisis final:',
+            coherent
           );
 
+
+          return coherent;
 
         } catch (
           error: any
@@ -401,14 +610,6 @@ REGLAS:
             error
           );
 
-
-          /*
-            Esperamos antes del
-            segundo intento.
-
-            Esto ayuda cuando Gemini
-            tiene saturación temporal.
-          */
 
           if (
             attempt < 2
@@ -434,9 +635,9 @@ REGLAS:
 
 
     /*
-      new-report.component.ts
-      detectará este error y utilizará
-      el respaldo local.
+      El componente new-report tiene
+      un sistema local de respaldo,
+      por lo que lanzamos el error.
     */
 
     throw lastError;
@@ -444,6 +645,11 @@ REGLAS:
   }
 
 
+  /*
+    ================================
+    MODELO UTILIZADO
+    ================================
+  */
 
   getModelName():
   string {
@@ -457,9 +663,10 @@ REGLAS:
   }
 
 
-
   /*
-    Espera para reintentos
+    ================================
+    ESPERA PARA REINTENTOS
+    ================================
   */
 
   private wait(
@@ -482,9 +689,10 @@ REGLAS:
   }
 
 
-
   /*
-    Convertir imagen
+    ================================
+    CONVERTIR FOTO PARA GEMINI
+    ================================
   */
 
   private async fileToGenerativePart(
@@ -598,9 +806,10 @@ REGLAS:
   }
 
 
-
   /*
-    Validación final
+    ================================
+    VALIDACIÓN DE RESPUESTA
+    ================================
   */
 
   private validateAnalysis(
@@ -732,9 +941,152 @@ REGLAS:
       factoresRiesgo,
 
       requiereAtencionRapida:
-        Boolean(
-          analysis.requiereAtencionRapida
-        )
+        prioridad === 'alta'
+        ||
+        prioridad === 'urgente'
+
+    };
+
+  }
+
+
+  /*
+    ================================
+    COHERENCIA PRIORIDAD / RIESGO
+    ================================
+
+    Esta función no reemplaza a la IA.
+
+    Simplemente evita respuestas
+    contradictorias.
+  */
+
+  private enforceConsistency(
+    analysis:
+      GuayaLinkAIAnalysis
+  ):
+  GuayaLinkAIAnalysis {
+
+    let priority =
+      analysis.prioridad;
+
+
+    let risk =
+      analysis.nivelRiesgo;
+
+
+    /*
+      Una prioridad urgente debería
+      tener un nivel de riesgo alto.
+    */
+
+    if (
+      priority ===
+      'urgente'
+    ) {
+
+      risk =
+        Math.max(
+          risk,
+          8
+        );
+
+    }
+
+
+    /*
+      Una prioridad alta debería
+      tener riesgo considerable.
+    */
+
+    if (
+      priority ===
+      'alta'
+    ) {
+
+      risk =
+        Math.max(
+          risk,
+          6
+        );
+
+    }
+
+
+    /*
+      Si el riesgo devuelto es extremadamente
+      bajo, evitamos prioridades muy altas.
+    */
+
+    if (
+      risk <= 2
+      &&
+      (
+        priority === 'alta'
+        ||
+        priority === 'urgente'
+      )
+    ) {
+
+      priority =
+        'media';
+
+    }
+
+
+    /*
+      Si Gemini devuelve riesgo crítico
+      pero prioridad baja, corregimos
+      la contradicción.
+    */
+
+    if (
+      risk >= 9
+      &&
+      priority === 'baja'
+    ) {
+
+      priority =
+        'alta';
+
+    }
+
+
+    /*
+      Riesgo muy alto + prioridad media
+      se eleva a alta, pero NO se fuerza
+      automáticamente a urgente.
+
+      Urgente debe depender de la evidencia
+      analizada por Gemini.
+    */
+
+    if (
+      risk >= 8
+      &&
+      priority === 'media'
+    ) {
+
+      priority =
+        'alta';
+
+    }
+
+
+    return {
+
+      ...analysis,
+
+      prioridad:
+        priority,
+
+      nivelRiesgo:
+        risk,
+
+      requiereAtencionRapida:
+        priority === 'alta'
+        ||
+        priority === 'urgente'
 
     };
 
